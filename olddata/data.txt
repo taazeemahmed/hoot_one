@@ -1,0 +1,157 @@
+Ghana Patients Data: Assign to samuelpope419@gmail.com
+
+| Name         | Phone         | Medicine Name   | Date       |
+| ------------ | ------------- | --------------- | ---------- |
+| Mr. Benedict | +233202404282 | HOO-IMM PLUS B  | 9/23/2025  |
+| Mr. David    | +233244927503 | HOO-IMM PLUS OD | 11/5/2025  |
+| Mr. Colbert  | +23354336652  | HOO-IMM PLUS B  | 9/26/2025  |
+| Mr. Oluu     | +233245426554 | HOO-IMM PLUS B  | 9/25/2025  |
+| Mr. Raymond  | +233245312227 | HOO-IMM PLUS B  | 9/21/2025  |
+| Mr. Dawood   | +233206663970 | HOO-IMM PLUS B  | 9/3/2025   |
+| Mr. Adamu    | +233240775540 | HOO-IMM PLUS B  | 9/26/2025  |
+| Samuel       | +233550190587 | HOO-IMM PLUS B  | 11/29/2025 |
+| Dr. Tetteh   | +233540280003 | HOO-IMM PLUS B  | 9/10/2025  |
+| Ibrahim      | +233243413296 | HOO-IMM PLUS B  | 12/5/2025  |
+| Mr. Bart     | +233242146151 | HOO-IMM PLUS OD | 12/2/2025  |
+| Mr. Eugene   | +233244126605 | HOO-IMM PLUS B  | 9/12/2025  |
+| Madam Selina | +233543080405 | HOO-IMM PLUS B  | 9/23/2025  |
+| Madam Aisha  | +233531343487 | HOO-IMM PLUS B  | 9/10/2025  |
+
+
+=========================
+
+Nigeria Patients Data: Assign to kabirkt2003@gmail.com
+
+| Name                   | Phone          | Medicine Name          | Date       |
+| ---------------------- | -------------- | ---------------------- | ---------- |
+| Mr. Chukwu Ugochukwu   | +2348034276179 | HOO-IMM PLUS B         | 12/7/2025  |
+| Abduljaleel            | +2348039289688 | HOO-IMM PLUS OD        | 11/30/2025 |
+| Mr. Henry              | +2349129069876 | HOO-IMM PLUS B         | 11/7/2025  |
+| Jidda Garba            | +2347035852599 | HOO-IMM PLUS B         | 9/15/2025  |
+| Salawu Nureine         | +2349042668398 | HOO-IMM PLUS B         | 9/4/2025   |
+| Mr. Henry              | +2349129069876 | HOO-IMM PLUS B         | 10/11/2025 |
+| Mr. Isaac              | +2348091646592 | HOO-IMM PLUS (OLD-HIV) | 11/8/2025  |
+| Femi Fatusan           | +2348060193855 | HOO-IMM PLUS B         | 3/30/2026  |
+| Muhammad Abubakar      | +2348061685567 | HOO-IMM PLUS B         | 9/1/2025   |
+| Muhammad Abubakar      | +2348061685567 | HOO-IMM PLUS B         | 8/5/2025   |
+| Salawu Nureine         | +2349042668398 | HOO-IMM PLUS B         | 5/2/2025   |
+| Alh. Abdullahi         | +2348035073667 | HOO-IMM PLUS (OLD-HIV) | 3/18/2025  |
+| Muhammad Mashood       | +2348086948404 | HOO-IMM PLUS B         | 5/26/2025  |
+| Al-Sadiq               | +2348078671733 | HOO-IMM PLUS B         | 5/28/2025  |
+| Anthony Etim           | +2348065904116 | HOO-IMM PLUS (OLD-HIV) | 6/19/2025  |
+| Muhammad Mashood       | +2348086948404 | HOO-IMM PLUS B         | 5/26/2025  |
+| Ruwaida Dikko          | +2348065789605 | HOO-IMM PLUS OD        | 11/9/2025  |
+| Al-Sadiq               | +2348078671733 | HOO-IMM PLUS B         | 5/28/2025  |
+| Adeleke Ademola        | +2348037803333 | HOO-IMM PLUS B         | 11/29/2025 |
+| Muhammad Abubakar      | +2348061685567 | HOO-IMM PLUS B         | 8/5/2025   |
+| Muhammad Abubakar      | +2348061685567 | HOO-IMM PLUS B         | 8/5/2025   |
+| Ope Joseph             | +2348111226209 | HOO-IMM PLUS B         | 6/19/2025  |
+| Mr. Tony Nonso Okoye   | +2348024951715 | HOO-IMM PLUS B         | 2/3/2025   |
+| Yakubu Umar            | +2348034684088 | HOO-IMM PLUS B         | 11/17/2025 |
+| Abduljaleel            | +2348039289688 | HOO-IMM PLUS (OLD-HIV) | 8/22/2025  |
+| Hamza Rabiu            | +2348139218877 | HOO-IMM PLUS B         | 12/17/2025 |
+| Mr. Alade              | +2348094516454 | HOO-IMM PLUS (OLD-HIV) | 6/22/2025  |
+| Muhammad Abubakar      | +2348061685567 | HOO-IMM PLUS B         | 8/5/2025   |
+| Mr. Chukwu Ugochukwu   | +2348034276179 | HOO-IMM PLUS B         | 7/22/2025  |
+| Muhammad Mashood       | +2348086948404 | HOO-IMM PLUS B         | 5/26/2025  |
+| Mr. Owobi Partric      | +2348036839736 | HOO-IMM PLUS B         | 10/17/2025 |
+| Peter Iliya            | +2348107007279 | HOO-IMM PLUS B         | 11/8/2025  |
+| Salawu Nureine         | +2349042668398 | HOO-IMM PLUS B         | 5/2/2025   |
+| Miss Mercy Danladi     | +2349056653337 | HOO-IMM PLUS B         | 2/25/2025  |
+| Anthony Uchenna        | +2348132427234 | HOO-IMM PLUS B         | 11/8/2025  |
+| Emmanuel Nonso         | +2348130278500 | HOO-IMM PLUS (OLD-HIV) | 11/17/2025 |
+| Obiara Aniagu          | +2348033431514 | HOO-IMM PLUS B         | 12/20/2025 |
+| Muhammad Abubakar      | +2348061685567 | HOO-IMM PLUS B         | 8/5/2025   |
+| Mr. Sunday Eboigbe     | +2348036497526 | HOO-IMM PLUS B         | 9/22/2025  |
+| Mr. Obinnax            | +2348136843338 | HOO-IMM PLUS (OLD-HIV) | 12/26/2025 |
+| Mrs Blessings Jaiyeoba | +2348055603877 | HOO-IMM PLUS B         | 9/17/2025  |
+| Muhammad Abubakar      | +2348061685567 | HOO-IMM PLUS B         | 8/5/2025   |
+| Femi Fatusan           | +2348060193855 | HOO-IMM PLUS B         | 11/20/2025 |
+| Dr. Johnson            | +2347031376430 | HOO-IMM PLUS B         | 11/27/2025 |
+
+=========================
+
+Liberia Patients Data, Assign to dimdenyan1@gmail.com
+
+| Name                  | Phone         | Medicine Name  | Date       |
+| --------------------- | ------------- | -------------- | ---------- |
+| Emmanuel Tamba        | +231778149474 | HOO-IMM PLUS B | 8/24/2025  |
+| Mr Jackson Doe        | +231777644446 | HOO-IMM PLUS B | 10/22/2025 |
+| Linda Paye            | +231778238820 | HOO-IMM PLUS B | 8/18/2025  |
+| Vasco Yini            | +231775676195 | HOO-IMM PLUS B | 3/10/2025  |
+| Peter Gaye            | +231775031703 | HOO-IMM PLUS B | 12/5/2025  |
+| Marcus Gray           | +231778149474 | HOO-IMM PLUS B | 11/17/2025 |
+| Patrick               | +231770336292 | HOO-IMM PLUS B | 8/30/2025  |
+| Alex Gbakoloi Nanoh   | +231770180880 | HOO-IMM PLUS B | 12/21/2025 |
+| Famata Titus          | +231770390318 | HOO-IMM PLUS B | 10/12/2025 |
+| Olatunji A. Adebola   | +231777971541 | HOO-IMM PLUS B | 1/17/2026  |
+| Maranata Nyumah       | +231880536913 | HOO-IMM PLUS B | 9/15/2025  |
+| Kenneth Abdullah      | +231881530950 | HOO-IMM PLUS B | 4/1/2025   |
+| Felton Joe            | +231555203140 | HOO-IMM PLUS B | 10/25/2025 |
+| Hector                | +231777313100 | HOO-IMM PLUS B | 11/25/2025 |
+| Progress              | +231886578790 | HOO-IMM PLUS B | 12/22/2025 |
+| A. Lawrence D. Baimbo | +231777444404 | HOO-IMM PLUS B | 1/17/2026  |
+| Patrick               | +231886593589 | HOO-IMM PLUS B | 9/18/2025  |
+| Nahn Kollie           | +231886761134 | HOO-IMM PLUS B | 7/7/2025   |
+| Agnes Cephas          | +231777106255 | HOO-IMM PLUS B | 3/24/2025  |
+| Jersey Sumo           | +231774229905 | HOO-IMM PLUS B | 11/28/2025 |
+| Samuel                | +231776801986 | HOO-IMM PLUS B | 3/21/2025  |
+| Eric Togar            | +231776706260 | HOO-IMM PLUS B | 11/17/2025 |
+| Nyenekon Esco Sarweh  | +231886766391 | HOO-IMM PLUS B | 11/1/2025  |
+| Kebeh                 | +231886535905 | HOO-IMM PLUS B | 8/19/2025  |
+| Mr Zarwu Gboluma      | +231888108000 | HOO-IMM PLUS B | 12/14/2025 |
+| Boima Johnson         | +231881656973 | HOO-IMM PLUS B | 3/26/2025  |
+| Gifty M. Koygbo       | +231555535087 | HOO-IMM PLUS B | 1/5/2026   |
+| Peter Koryon          | +231778256117 | HOO-IMM PLUS B | 4/24/2025  |
+| Daouda Kromah         | +23177665442  | HOO-IMM PLUS B | 5/29/2025  |
+| Finnee                | +231777818829 | HOO-IMM PLUS B | 1/3/2026   |
+| Venata                | +231775508450 | HOO-IMM PLUS B | 6/30/2025  |
+| Mr Mulbah             | +231776413089 | HOO-IMM PLUS B | 12/28/2025 |
+| Joseph Govo           | +231886501302 | HOO-IMM PLUS B | 12/10/2025 |
+| Fatumata Jabahta      | +231775243913 | HOO-IMM PLUS B | 11/21/2025 |
+| Mr Johnson            | +231770998856 | HOO-IMM PLUS B | 12/21/2025 |
+| Moses Justine         | +231888101641 | HOO-IMM PLUS B | 9/23/2025  |
+| Keselee Steven        | +231770189490 | HOO-IMM PLUS B | 12/15/2025 |
+
+=========================
+
+Tanzania Patient Data, Assign to jpmbucha@gmail.com
+
+| Name                | Phone         | Medicine Name   | Date       |
+| ------------------- | ------------- | --------------- | ---------- |
+| Christopher Chale   | +255784237713 | HOO-IMM PLUS B  | 6/12/2025  |
+| Mathayo Anthony     | +255759290698 | HOO-IMM PLUS OD | 1/26/2026  |
+| Marcelino Mwageni   | +255754654073 | HOO-IMM PLUS B  | 9/19/2025  |
+| Kelvin              | +255629627148 | HOO-IMM PLUS B  | 9/18/2025  |
+| Godfray             | +255678145466 | HOO-IMM PLUS B  | 6/18/2025  |
+| Leocardia Katemi    | +255769151727 | HOO-IMM PLUS B  | 7/18/2025  |
+| Adam Harisson       | +255712051068 | HOO-IMM PLUS B  | 12/1/2025  |
+| Sarah Diana         | +255673335203 | HOO-IMM PLUS OD | 12/5/2025  |
+| Alfred Onzima       | +256782076158 | HOO-IMM PLUS B  | 9/1/2025   |
+| Rachel              | +255768238943 | HOO-IMM PLUS B  | 7/17/2025  |
+| Dereck              | +255755796090 | HOO-IMM PLUS B  | 9/29/2025  |
+| Marcelino Mwageni   | +255754654073 | HOO-IMM PLUS B  | 9/19/2025  |
+| Christopher Chale   | +255784237713 | HOO-IMM PLUS B  | 6/12/2025  |
+| Daniel Sisty        | +255755535431 | HOO-IMM PLUS B  | 8/5/2025   |
+| Maganga             | +255716739898 | HOO-IMM PLUS OD | 12/24/2025 |
+| Zakayo Tairo        | +255762454026 | HOO-IMM PLUS B  | 12/10/2025 |
+| Natasha Hospecious  | +255783554991 | HOO-IMM PLUS OD | 10/4/2025  |
+| Richard Shirima     | +255787409455 | HOO-IMM PLUS B  | 9/22/2025  |
+| Lefatya             | +255693925356 | HOO-IMM PLUS B  | 7/30/2025  |
+| Ibrahim Mponzi      | +255756488610 | HOO-IMM PLUS B  | 9/24/2025  |
+| Jabiri              | +255686782295 | HOO-IMM PLUS B  | 8/14/2025  |
+| Andrew Urassa       | +255679353187 | HOO-IMM PLUS B  | 9/28/2025  |
+| Amos                | +255742172873 | HOO-IMM PLUS B  | 8/8/2025   |
+| Kimaro Edward       | +255713322856 | HOO-IMM PLUS B  | 6/2/2025   |
+| Issac Bahati Ngaili | +255673267677 | HOO-IMM PLUS B  | 6/16/2025  |
+| Jabiri              | +255686782295 | HOO-IMM PLUS B  | 8/14/2025  |
+| Queen Holela        | +255783477777 | HOO-IMM PLUS B  | 9/21/2025  |
+| Leocardia Katemi    | +255769151727 | HOO-IMM PLUS B  | 7/18/2025  |
+| Suma                | +255754966262 | HOO-IMM PLUS B  | 8/14/2025  |
+| Waryoba             | +255674147715 | HOO-IMM PLUS B  | 8/25/2025  |
+| Kimaro Edward       | +255713322856 | HOO-IMM PLUS B  | 6/2/2025   |
+| Silvester Kijichi   | +255656970737 | HOO-IMM PLUS B  | 12/5/2025  |
+| Julius Stephen      | +255752410017 | HOO-IMM PLUS B  | 6/11/2025  |
+| Andrew Urassa       | +255679353187 | HOO-IMM PLUS B  | 9/28/2025  |
+| Matokeo Simba       | +255753008390 | HOO-IMM PLUS B  | 10/28/2025 |
+| Godfray             | +255678145466 | HOO-IMM PLUS B  | 6/18/2025  |
