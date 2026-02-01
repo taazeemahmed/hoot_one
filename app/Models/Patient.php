@@ -17,6 +17,15 @@ class Patient extends Model
         'country',
         'address',
         'notes',
+        'lead_status',
+        'lead_quality',
+        'source',
+        'assigned_by',
+        'assigned_at'
+    ];
+
+    protected $casts = [
+        'assigned_at' => 'datetime',
     ];
 
     /**
@@ -41,5 +50,29 @@ class Patient extends Model
     public function latestOrder()
     {
         return $this->hasOne(Order::class)->latestOfMany();
+    }
+
+    /**
+     * Get user who assigned this lead
+     */
+    public function assignedBy()
+    {
+        return $this->belongsTo(User::class, 'assigned_by');
+    }
+
+    /**
+     * Get activities for this lead
+     */
+    public function activities()
+    {
+        return $this->hasMany(LeadActivity::class)->latest();
+    }
+
+    /**
+     * Get the latest activity for this lead
+     */
+    public function latestActivity()
+    {
+        return $this->hasOne(LeadActivity::class)->latestOfMany();
     }
 }

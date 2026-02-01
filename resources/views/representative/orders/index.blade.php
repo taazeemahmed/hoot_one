@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-            <h3 class="text-3xl font-medium text-gray-700">Orders</h3>
+            <h3 class="text-2xl sm:text-3xl font-medium text-gray-700">Orders</h3>
             <p class="mt-1 text-sm text-gray-500">Manage your patient orders</p>
         </div>
-        <a href="{{ route('representative.orders.create') }}" class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-hoot-dark border border-transparent rounded-lg active:bg-hoot-green hover:bg-hoot-green focus:outline-none focus:shadow-outline-green">
+        <a href="{{ route('representative.orders.create') }}" class="w-full sm:w-auto text-center px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-hoot-dark border border-transparent rounded-lg active:bg-hoot-green hover:bg-hoot-green focus:outline-none focus:shadow-outline-green">
             Create Order
         </a>
     </div>
@@ -39,8 +39,52 @@
         </form>
     </div>
 
-    <!-- Table -->
-    <div class="w-full overflow-hidden rounded-lg shadow-xs">
+    <!-- Mobile Cards -->
+    <div class="space-y-4 sm:hidden">
+        @forelse($orders as $order)
+            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ $order->patient->name }}</p>
+                        <p class="text-xs text-gray-500">{{ $order->patient->phone }}</p>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $order->status == 'active' ? 'text-green-700 bg-green-100' : 'text-gray-700 bg-gray-100' }}">
+                        {{ ucfirst($order->status) }}
+                    </span>
+                </div>
+
+                <div class="mt-3 text-sm text-gray-700">
+                    <div>{{ $order->medicine->name }} • {{ $order->packs_ordered }} packs</div>
+                    <div class="text-xs text-gray-500">Start: {{ $order->treatment_start_date->format('d M Y') }}</div>
+                    <div class="text-xs text-gray-500">Renewal: {{ $order->expected_renewal_date->format('d M Y') }}</div>
+                    @if($order->status === 'active')
+                        <div class="text-xs {{ $order->days_until_renewal <= 7 ? 'text-red-600 font-semibold' : 'text-gray-500' }}">
+                            {{ $order->days_until_renewal }} days
+                        </div>
+                    @endif
+                </div>
+
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <a href="{{ route('representative.orders.edit', $order) }}" class="text-gray-600 text-xs border border-gray-200 px-3 py-1.5 rounded">Edit</a>
+                    <form action="{{ route('representative.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-600 text-xs border border-red-200 px-3 py-1.5 rounded">Delete</button>
+                    </form>
+                </div>
+            </div>
+        @empty
+            <div class="text-sm text-center text-gray-500 bg-white rounded-lg p-6">
+                No orders found.
+            </div>
+        @endforelse
+        <div class="px-2">
+            {{ $orders->links() }}
+        </div>
+    </div>
+
+    <!-- Table (Desktop) -->
+    <div class="hidden sm:block w-full overflow-hidden rounded-lg shadow-xs">
         <div class="w-full overflow-x-auto">
             <table class="w-full whitespace-no-wrap">
                 <thead>
@@ -82,7 +126,7 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            <div class="flex items-center space-x-4 text-sm">
+                            <div class="flex items-center flex-wrap gap-2 text-sm">
                                 <a href="{{ route('representative.orders.edit', $order) }}" class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-gray-600 rounded-lg focus:outline-none focus:shadow-outline-gray hover:text-gray-900" aria-label="Edit">
                                     <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>

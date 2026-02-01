@@ -25,12 +25,12 @@
                 <div>
                     <label class="block text-sm text-gray-700">Phone</label>
                     <div class="flex mt-1">
-                        <select name="country_code" class="border-gray-300 rounded-l-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50">
-                            <option value="+1">+1 (US)</option>
-                            <option value="+91" selected>+91 (IN)</option>
-                            <option value="+44">+44 (UK)</option>
-                            <option value="+971">+971 (UAE)</option>
-                            <!-- Add more as needed -->
+                        <select name="country_code" class="border-gray-300 rounded-l-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50 max-w-[120px]">
+                            @foreach($countryCodes as $code)
+                                <option value="{{ $code['code'] }}" {{ $code['code'] === '+91' ? 'selected' : '' }}>
+                                    {{ $code['code'] }} ({{ $code['country'] }})
+                                </option>
+                            @endforeach
                         </select>
                         <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Mobile Number" required class="block w-full border-l-0 border-gray-300 rounded-r-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50">
                     </div>

@@ -53,6 +53,16 @@ class OrderController extends Controller
     {
         $representative = auth()->user()->representative;
         $patients = Patient::where('representative_id', $representative->id)->get();
+        $patientsForJs = $patients
+            ->map(function ($p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'phone' => $p->phone,
+                    'label' => $p->name . ' (' . $p->phone . ')',
+                ];
+            })
+            ->values();
         $medicines = Medicine::active()->get();
         
         // Define standard available codes
@@ -109,7 +119,7 @@ class OrderController extends Controller
             $selectedCountryCode = '+91'; 
         }
 
-        return view('representative.orders.create', compact('patients', 'medicines', 'representative', 'countryCodes', 'selectedCountryCode'));
+        return view('representative.orders.create', compact('patients', 'patientsForJs', 'medicines', 'representative', 'countryCodes', 'selectedCountryCode'));
     }
 
     public function store(Request $request)
@@ -141,6 +151,7 @@ class OrderController extends Controller
                 'country' => $request->new_patient_country ?? $representative->country,
                 'address' => $request->new_patient_address ?? null,
                 'notes' => 'Created instantly from Order page',
+                'lead_status' => 'converted',
             ]);
         } else {
             // Verify patient belongs to this representative

@@ -64,10 +64,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user is marketing member
+     */
+    public function isMarketingMember(): bool
+    {
+        return $this->role === 'marketing_member';
+    }
+
+    /**
      * Get the representative profile for the user
      */
     public function representative()
     {
         return $this->hasOne(Representative::class);
+    }
+
+    /**
+     * Get the marketing targets for the user
+     */
+    public function marketingTargets()
+    {
+        return $this->hasMany(MarketingTarget::class);
     }
 }

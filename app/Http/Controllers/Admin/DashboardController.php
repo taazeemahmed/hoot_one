@@ -22,6 +22,7 @@ class DashboardController extends Controller
             'total_orders' => Order::count(),
             'active_orders' => Order::active()->count(),
             'total_medicines' => Medicine::active()->count(),
+            'pending_orders' => Order::where('status', 'pending')->count(),
         ];
 
         // Upcoming renewals (next 30 days)

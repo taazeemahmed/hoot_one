@@ -26,6 +26,8 @@ class Order extends Model
         'expected_renewal_date' => 'date',
     ];
 
+    protected $appends = ['days_until_renewal', 'renewal_status'];
+
     /**
      * Get the patient for this order
      */

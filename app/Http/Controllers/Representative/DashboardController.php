@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Representative;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -48,12 +49,21 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // Pending Leads
+        $pendingLeads = Patient::where('representative_id', $representative->id)
+            ->whereIn('lead_status', ['new', 'assigned', 'contacted', 'negotiating'])
+            ->with('latestActivity')
+            ->latest() // Pending usually means newest first or urgency? Latest assigned is good.
+            ->limit(10)
+            ->get();
+
         return view('representative.dashboard', compact(
             'representative',
             'stats',
             'upcomingRenewals',
             'overdueRenewals',
-            'recentOrders'
+            'recentOrders',
+            'pendingLeads'
         ));
     }
 }
