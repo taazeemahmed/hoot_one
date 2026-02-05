@@ -13,7 +13,7 @@ use Carbon\Carbon;
 
 class LeadController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $representative = auth()->user()->representative;
 
@@ -21,12 +21,38 @@ class LeadController extends Controller
             abort(403, 'User is not a representative.');
         }
 
-        // Fetch patients that are in 'assigned' or 'contacted' status
+        // Fetch patients that are in lead status with priority sorting
+        // Priority: Hot leads without recent activity > New leads > Hot leads > Warm leads > Cold leads
+        $search = trim((string) $request->get('search', ''));
+
         $leads = Patient::where('representative_id', $representative->id)
             ->whereIn('lead_status', ['new', 'assigned', 'contacted', 'negotiating'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($subQuery) use ($search) {
+                    $subQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhere('country', 'like', "%{$search}%");
+                });
+            })
             ->with(['latestActivity'])
-            ->latest('assigned_at')
-            ->paginate(15);
+            ->orderByRaw("
+                CASE 
+                    WHEN lead_quality = 'hot' AND NOT EXISTS (
+                        SELECT 1 FROM lead_activities 
+                        WHERE lead_activities.patient_id = patients.id 
+                        AND lead_activities.created_at > NOW() - INTERVAL 2 DAY
+                    ) THEN 1
+                    WHEN lead_status = 'new' OR lead_status = 'assigned' THEN 2
+                    WHEN lead_quality = 'hot' THEN 3
+                    WHEN lead_quality = 'warm' THEN 4
+                    WHEN lead_quality = 'cold' THEN 5
+                    ELSE 6
+                END ASC
+            ")
+            ->orderBy('assigned_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
             
         $medicines = Medicine::active()->get();
 

@@ -13,30 +13,38 @@ class LeadController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * CRITICAL: Marketing members can ONLY see leads they personally added (assigned_by = their user ID)
+     * This isolation is mandatory to avoid internal conflicts.
      */
     public function index(Request $request)
     {
-        $query = Patient::query()->with(['representative.user', 'latestOrder']);
+        $userId = Auth::id();
+        
+        // Marketing members can ONLY see their own leads
+        $query = Patient::query()
+            ->where('assigned_by', $userId)
+            ->with(['representative.user', 'latestOrder']);
 
-        if ($request->has('status')) {
+        if ($request->has('status') && $request->status) {
             $query->where('lead_status', $request->status);
         }
-        if ($request->has('quality')) {
+        if ($request->has('quality') && $request->quality) {
             $query->where('lead_quality', $request->quality);
         }
 
         $leads = $query->latest()->paginate(15);
         
-        // Metrics
-        $totalCount = Patient::count();
-        $hotCount = Patient::where('lead_quality', 'hot')->count();
-        $newCount = Patient::where('lead_status', 'new')->count();
-        $assignedCount = Patient::where('lead_status', 'assigned')->count();
+        // Metrics - ONLY for this marketing member's leads
+        $totalCount = Patient::where('assigned_by', $userId)->count();
+        $hotCount = Patient::where('assigned_by', $userId)->where('lead_quality', 'hot')->count();
+        $newCount = Patient::where('assigned_by', $userId)->where('lead_status', 'new')->count();
+        $assignedCount = Patient::where('assigned_by', $userId)->where('lead_status', 'assigned')->count();
+        $convertedCount = Patient::where('assigned_by', $userId)->where('lead_status', 'converted')->count();
 
         // For assignment modal
         $representatives = Representative::with('user')->where('status', 'active')->get();
 
-        return view('marketing.leads.index', compact('leads', 'representatives', 'totalCount', 'hotCount', 'newCount', 'assignedCount'));
+        return view('marketing.leads.index', compact('leads', 'representatives', 'totalCount', 'hotCount', 'newCount', 'assignedCount', 'convertedCount'));
     }
 
     /**
@@ -103,17 +111,30 @@ class LeadController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * Marketing members can only edit leads they created.
      */
     public function edit(Patient $lead)
     {
-        return view('marketing.leads.edit', compact('lead'));
+        // Verify ownership - marketing members can only edit their own leads
+        if ($lead->assigned_by !== Auth::id()) {
+            abort(403, 'You can only edit leads you have created.');
+        }
+        
+        $representatives = Representative::with('user')->where('status', 'active')->get();
+        return view('marketing.leads.edit', compact('lead', 'representatives'));
     }
 
     /**
      * Update the specified resource in storage.
+     * Marketing members can only update leads they created.
      */
     public function update(Request $request, Patient $lead)
     {
+        // Verify ownership
+        if ($lead->assigned_by !== Auth::id()) {
+            abort(403, 'You can only update leads you have created.');
+        }
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -131,9 +152,15 @@ class LeadController extends Controller
 
     /**
      * Assign lead to representative
+     * Marketing members can only assign leads they created.
      */
     public function assign(Request $request, Patient $lead)
     {
+        // Verify ownership
+        if ($lead->assigned_by !== Auth::id()) {
+            abort(403, 'You can only assign leads you have created.');
+        }
+        
         $request->validate([
             'representative_id' => 'required|exists:representatives,id'
         ]);
@@ -158,9 +185,15 @@ class LeadController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Marketing members can only delete leads they created.
      */
     public function destroy(Patient $lead)
     {
+        // Verify ownership
+        if ($lead->assigned_by !== Auth::id()) {
+            abort(403, 'You can only delete leads you have created.');
+        }
+        
         // Delete related activities first
         LeadActivity::where('patient_id', $lead->id)->delete();
         

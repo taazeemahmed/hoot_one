@@ -44,11 +44,21 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('representatives', RepresentativeController::class);
     Route::resource('medicines', MedicineController::class);
     Route::resource('patients', AdminPatientController::class);
-    Route::resource('patients', AdminPatientController::class);
     Route::resource('orders', AdminOrderController::class);
     Route::resource('marketing-members', App\Http\Controllers\Admin\MarketingMemberController::class);
     Route::get('/marketing-members/{user}/target', [App\Http\Controllers\Admin\MarketingMemberController::class, 'setTarget'])->name('marketing-members.set-target');
     Route::post('/marketing-members/{user}/target', [App\Http\Controllers\Admin\MarketingMemberController::class, 'storeTarget'])->name('marketing-members.store-target');
+
+    // Lead Management (Company Direct + All Leads View)
+    Route::resource('leads', App\Http\Controllers\Admin\LeadController::class);
+    Route::post('/leads/{lead}/assign', [App\Http\Controllers\Admin\LeadController::class, 'assign'])->name('leads.assign');
+    Route::post('/leads/{lead}/activity', [App\Http\Controllers\Admin\LeadController::class, 'storeActivity'])->name('leads.activity.store');
+
+    // Analytics & Reports
+    Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+    Route::get('/analytics/leads', [App\Http\Controllers\Admin\AnalyticsController::class, 'leads'])->name('analytics.leads');
+    Route::get('/analytics/representatives', [App\Http\Controllers\Admin\AnalyticsController::class, 'representatives'])->name('analytics.representatives');
+    Route::get('/analytics/marketing', [App\Http\Controllers\Admin\AnalyticsController::class, 'marketing'])->name('analytics.marketing');
 
     // Settings & Logs
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

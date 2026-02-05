@@ -1,328 +1,514 @@
-<x-app-layout>
-    <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-        <div>
-            <h3 class="text-2xl sm:text-3xl font-medium text-gray-700">Pending Leads</h3>
-            <p class="mt-1 text-sm text-gray-500">Manage your assigned leads and log interactions.</p>
-        </div>
-    </div>
-
-    @if(session('success'))
-        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
-        </div>
-    @endif
-
-    <!-- Mobile Cards -->
-    <div class="space-y-4 sm:hidden">
-        @forelse($leads as $lead)
-            <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4" x-data="{ openLog: false, statusUpdate: '' }">
-                <div class="flex items-start justify-between gap-3">
-                    <div>
-                        <p class="font-semibold text-gray-800">{{ $lead->name }}</p>
-                        <p class="text-xs text-gray-600">{{ $lead->phone }}</p>
-                        <p class="text-xs text-gray-500">{{ $lead->country }} | {{ $lead->email }}</p>
+﻿<x-app-layout>
+    <div x-data="leadsPage()" class="space-y-4">
+        <!-- Tutorial Hint -->
+        <template x-if="showTutorialHint && !localStorage.getItem('leads_tutorial_done')">
+            <div class="bg-hoot-light border border-hoot-green/20 rounded-xl p-3 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-hoot-green/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-4 h-4 text-hoot-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
                     </div>
-                    <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $lead->lead_status === 'new' || $lead->lead_status === 'assigned' ? 'text-orange-700 bg-orange-100' : 'text-green-700 bg-green-100' }}">
-                        {{ ucfirst($lead->lead_status) }}
-                    </span>
+                    <span class="text-sm text-hoot-dark">First time? <button @click="startTutorial()" class="font-semibold underline">Learn how to manage leads</button></span>
                 </div>
-
-                <div class="mt-2 text-xs text-gray-400">Assigned: {{ $lead->assigned_at ? $lead->assigned_at->diffForHumans() : 'N/A' }}</div>
-
-                <div class="mt-3 text-xs text-gray-600">
-                    <span class="bg-blue-100 text-blue-800 font-semibold px-2 py-1 rounded">{{ $lead->lead_quality ?? 'warm' }}</span>
-                    <div class="mt-2">
-                        @if($lead->latestActivity)
-                            <span class="font-semibold text-gray-700">{{ ucfirst($lead->latestActivity->type) }}:</span> {{ $lead->latestActivity->result }}
-                            <span class="block text-gray-400">{{ $lead->latestActivity->created_at->diffForHumans() }}</span>
-                        @else
-                            <span class="text-gray-400 italic">No activity yet</span>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="mt-3 flex flex-wrap gap-2">
-                    <a href="{{ route('representative.leads.edit', $lead) }}" class="p-2 text-white bg-amber-500 rounded-lg text-xs">Edit</a>
-                    <a href="https://wa.me/{{ $lead->phone }}" target="_blank" class="p-2 text-white bg-green-500 rounded-lg text-xs">WhatsApp</a>
-                    <a href="tel:{{ $lead->phone }}" class="p-2 text-white bg-blue-500 rounded-lg text-xs">Call</a>
-                    <button @click="openLog = true" class="px-3 py-2 text-xs font-medium text-white bg-purple-600 rounded-lg">Log Activity</button>
-                </div>
-
-                <!-- Modal (Mobile) -->
-                <div x-show="openLog" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" x-cloak>
-                    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div class="fixed inset-0 transition-opacity" @click="openLog = false">
-                            <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-                        </div>
-
-                        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-                            <form action="{{ route('representative.leads.activity.store', $lead) }}" method="POST">
-                                @csrf
-                                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                    <h3 class="text-xl leading-6 font-bold text-gray-900 mb-6 bg-purple-50 p-2 rounded-lg border-l-4 border-purple-500">Log Activity for {{ $lead->name }}</h3>
-                                    
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Activity Type</label>
-                                            <select name="type" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200">
-                                                <option value="call">Call</option>
-                                                <option value="whatsapp">WhatsApp Message</option>
-                                                <option value="note">General Note</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Lead Quality</label>
-                                            <select name="lead_quality" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200">
-                                                <option value="hot" {{ $lead->lead_quality === 'hot' ? 'selected' : '' }}>🔥 Hot</option>
-                                                <option value="warm" {{ $lead->lead_quality === 'warm' ? 'selected' : '' }}>☀️ Warm</option>
-                                                <option value="cold" {{ $lead->lead_quality === 'cold' ? 'selected' : '' }}>❄️ Cold</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Result/Outcome</label>
-                                        <input type="text" name="result" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200" placeholder="e.g. Interested, No Answer" required>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Detailed Notes</label>
-                                        <textarea name="notes" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200" rows="3"></textarea>
-                                    </div>
-
-                                    <hr class="border-gray-200 my-4">
-
-                                    <div class="mb-4">
-                                        <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Update Status</label>
-                                        <select name="status_update" x-model="statusUpdate" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200">
-                                            <option value="">-- Keep Current Status --</option>
-                                            <option value="contacted">Contacted</option>
-                                            <option value="negotiating">Negotiating</option>
-                                            <option value="converted">✅ Convert to Patient</option>
-                                            <option value="lost">Lost</option>
-                                        </select>
-                                        <p class="text-xs text-gray-500 mt-1" x-show="statusUpdate === 'converted'">
-                                            <span class="text-green-600 font-bold">Note:</span> This will move the lead to your "My Patients" list.
-                                        </p>
-                                    </div>
-
-                                    <div x-show="statusUpdate === 'converted'" class="bg-green-50 p-4 rounded-lg border border-green-200">
-                                        <h4 class="font-bold text-green-800 mb-2 flex items-center">
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                            Initial Order Details
-                                        </h4>
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <div>
-                                                <label class="block text-gray-700 text-xs font-bold mb-1">Medicine Given</label>
-                                                <select name="medicine_id" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-200">
-                                                    <option value="">Select Medicine...</option>
-                                                    @foreach($medicines as $med)
-                                                        <option value="{{ $med->id }}">{{ $med->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div>
-                                                <label class="block text-gray-700 text-xs font-bold mb-1">Packs Created</label>
-                                                <input type="number" name="packs_ordered" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-200" min="1" value="1">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                    <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm shadow-purple-200">
-                                        Save Activity & Update
-                                    </button>
-                                    <button type="button" @click="openLog = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <button @click="dismissTutorialHint()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
-        @empty
-            <div class="text-sm text-center text-gray-500 bg-white rounded-lg p-6">
-                No pending leads assigned to you.
-            </div>
-        @endforelse
-        <div class="px-2">
-            {{ $leads->links() }}
-        </div>
-    </div>
+        </template>
 
-    <!-- Table (Desktop) -->
-    <div class="hidden sm:block w-full overflow-hidden rounded-lg shadow-xs bg-white">
-        <div class="w-full overflow-x-auto">
-            <table class="w-full whitespace-no-wrap">
-                <thead>
-                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b bg-gray-50">
-                        <th class="px-4 py-3">Lead Details</th>
-                        <th class="px-4 py-3">Interest</th>
-                        <th class="px-4 py-3">Status</th>
-                        <th class="px-4 py-3">Latest Activity</th>
-                        <th class="px-4 py-3">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y">
-                    @forelse($leads as $lead)
-                    <tr class="text-gray-700" x-data="{ openLog: false, statusUpdate: '' }">
-                        <td class="px-4 py-3">
-                            <div class="flex items-center text-sm">
-                                <div>
-                                    <p class="font-semibold">{{ $lead->name }}</p>
-                                    <p class="text-xs text-gray-600">{{ $lead->phone }}</p>
-                                    <p class="text-xs text-gray-500">{{ $lead->country }} | {{ $lead->email }}</p>
-                                    <p class="text-xs text-gray-400 mt-1">Assigned: {{ $lead->assigned_at ? $lead->assigned_at->diffForHumans() : 'N/A' }}</p>
-                                </div>
+        <!-- Page Header -->
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">My Leads</h1>
+                <p class="text-sm text-gray-500 mt-0.5">{{ $leads->total() }} lead{{ $leads->total() !== 1 ? 's' : '' }} to follow up</p>
+            </div>
+            <button @click="startTutorial()" class="p-2 text-gray-400 hover:text-hoot-green hover:bg-hoot-light rounded-lg transition-colors" title="Help">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Search -->
+        <form method="GET" action="{{ route('representative.leads.index') }}" class="bg-white rounded-xl border border-gray-100 p-3">
+            <div class="flex items-center gap-2">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z"></path>
+                        </svg>
+                    </div>
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        class="w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-hoot-green/20 focus:border-hoot-green"
+                        placeholder="Search leads by name, phone, or country..."
+                    />
+                </div>
+                <button type="submit" class="px-4 py-2.5 bg-hoot-dark hover:bg-hoot-green text-white rounded-xl text-sm font-medium transition-colors">
+                    Search
+                </button>
+                @if(request('search'))
+                    <a href="{{ route('representative.leads.index') }}" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-colors">
+                        Clear
+                    </a>
+                @endif
+            </div>
+        </form>
+
+        @if(session('success'))
+            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3" role="alert">
+                <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="text-sm">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <!-- Lead Cards -->
+        <div class="space-y-3">
+            @forelse($leads as $lead)
+                @php
+                    $qualityColors = [
+                        'hot' => 'bg-red-100 text-red-700 border-red-200',
+                        'warm' => 'bg-amber-100 text-amber-700 border-amber-200',
+                        'cold' => 'bg-blue-100 text-blue-700 border-blue-200',
+                    ];
+                    $qualityIcons = [
+                        'hot' => '🔥',
+                        'warm' => '☀️',
+                        'cold' => '❄️',
+                    ];
+                    $quality = $lead->lead_quality ?? 'warm';
+                    $hasNoActivity = !$lead->latestActivity;
+                    $isUrgent = $quality === 'hot' || $hasNoActivity;
+                @endphp
+                
+                <div class="bg-white rounded-xl border {{ $isUrgent ? 'border-amber-200 shadow-sm' : 'border-gray-100' }} overflow-hidden">
+                    
+                    <!-- Card Content -->
+                    <div class="p-4">
+                        <!-- Top Row: Name + Quality Badge -->
+                        <div class="flex items-start justify-between gap-3 mb-2">
+                            <div class="min-w-0 flex-1">
+                                <h3 class="font-semibold text-gray-900 truncate">{{ $lead->name ?: $lead->phone }}</h3>
+                                <p class="text-sm text-gray-500 flex items-center gap-1.5 mt-0.5">
+                                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    {{ $lead->country }}
+                                </p>
                             </div>
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">
-                                {{ $lead->lead_quality ?? 'warm' }}
+                            <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full border {{ $qualityColors[$quality] ?? $qualityColors['warm'] }}">
+                                <span>{{ $qualityIcons[$quality] ?? '☀️' }}</span>
+                                {{ ucfirst($quality) }}
                             </span>
-                            <div class="mt-1 text-xs text-gray-500">{{ $lead->notes ?? 'No notes' }}</div>
-                        </td>
-                        <td class="px-4 py-3 text-xs">
-                             <span class="px-2 py-1 font-semibold leading-tight rounded-full {{ $lead->lead_status === 'new' || $lead->lead_status === 'assigned' ? 'text-orange-700 bg-orange-100' : 'text-green-700 bg-green-100' }}">
-                                {{ ucfirst($lead->lead_status) }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-sm max-w-xs truncate">
+                        </div>
+
+                        <!-- Last Activity Info -->
+                        <div class="text-sm text-gray-500 mb-3">
                             @if($lead->latestActivity)
-                                <div class="text-xs">
-                                    <span class="font-bold">{{ ucfirst($lead->latestActivity->type) }}:</span> {{ $lead->latestActivity->result }}
-                                    <span class="block text-gray-400">{{ $lead->latestActivity->created_at->diffForHumans() }}</span>
-                                </div>
+                                <span class="text-gray-600">Last contact:</span> 
+                                {{ $lead->latestActivity->created_at->diffForHumans() }}
+                                <span class="text-gray-400">·</span>
+                                <span class="text-gray-600">{{ ucfirst($lead->latestActivity->type) }}</span>
                             @else
-                                <span class="text-gray-400 italic">No activity yet</span>
+                                <span class="text-amber-600 font-medium">New lead - not contacted yet</span>
                             @endif
-                        </td>
-                        <td class="px-4 py-3 text-sm">
-                            <div class="flex items-center flex-wrap gap-2">
-                                <a href="{{ route('representative.leads.edit', $lead) }}" class="p-2 text-white bg-amber-500 rounded-lg hover:bg-amber-600 transition-colors" title="Edit Lead">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                                </a>
-                                <a href="https://wa.me/{{ $lead->phone }}" target="_blank" class="p-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors" title="WhatsApp">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.017-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487 2.982 1.288 2.982.858 3.526.801.544-.056 1.729-.706 1.977-1.387.248-.68.248-1.264.173-1.387z"/></svg>
-                                </a>
-                                <a href="tel:{{ $lead->phone }}" class="p-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors" title="Call">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                                </a>
-                                <button @click="openLog = true" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                                    Log Activity
-                                </button>
-                            </div>
+                        </div>
 
-                            <!-- Modal -->
-                            <div x-show="openLog" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;" x-cloak>
-                                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                                    <div class="fixed inset-0 transition-opacity" @click="openLog = false">
-                                        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-                                    </div>
+                        <!-- Action Buttons -->
+                        <div class="flex items-center gap-2">
+                            <!-- WhatsApp (Primary) -->
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9+]/', '', $lead->phone) }}" 
+                               target="_blank"
+                               class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium text-sm transition-colors">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                </svg>
+                                WhatsApp
+                            </a>
 
-                                    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-                                        <form action="{{ route('representative.leads.activity.store', $lead) }}" method="POST">
-                                            @csrf
-                                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                                <h3 class="text-xl leading-6 font-bold text-gray-900 mb-6 bg-purple-50 p-2 rounded-lg border-l-4 border-purple-500">Log Activity for {{ $lead->name }}</h3>
-                                                
-                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                                                    <div>
-                                                        <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Activity Type</label>
-                                                        <select name="type" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200">
-                                                            <option value="call">Call</option>
-                                                            <option value="whatsapp">WhatsApp Message</option>
-                                                            <option value="note">General Note</option>
-                                                        </select>
-                                                    </div>
-                                                    <div>
-                                                        <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Lead Quality</label>
-                                                        <select name="lead_quality" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200">
-                                                            <option value="hot" {{ $lead->lead_quality === 'hot' ? 'selected' : '' }}>🔥 Hot</option>
-                                                            <option value="warm" {{ $lead->lead_quality === 'warm' ? 'selected' : '' }}>☀️ Warm</option>
-                                                            <option value="cold" {{ $lead->lead_quality === 'cold' ? 'selected' : '' }}>❄️ Cold</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                            <!-- Call -->
+                            <a href="tel:{{ $lead->phone }}"
+                               class="w-11 h-11 inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                </svg>
+                            </a>
 
-                                                <div class="mb-4">
-                                                    <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Result/Outcome</label>
-                                                    <input type="text" name="result" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200" placeholder="e.g. Interested, No Answer" required>
-                                                </div>
-
-                                                <div class="mb-4">
-                                                    <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Detailed Notes</label>
-                                                    <textarea name="notes" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200" rows="3"></textarea>
-                                                </div>
-
-                                                <hr class="border-gray-200 my-4">
-
-                                                <div class="mb-4">
-                                                    <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Update Status</label>
-                                                    <select name="status_update" x-model="statusUpdate" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-200">
-                                                        <option value="">-- Keep Current Status --</option>
-                                                        <option value="contacted">Contacted</option>
-                                                        <option value="negotiating">Negotiating</option>
-                                                        <option value="converted">✅ Convert to Patient</option>
-                                                        <option value="lost">Lost</option>
-                                                    </select>
-                                                    <p class="text-xs text-gray-500 mt-1" x-show="statusUpdate === 'converted'">
-                                                        <span class="text-green-600 font-bold">Note:</span> This will move the lead to your "My Patients" list.
-                                                    </p>
-                                                </div>
-
-                                                <!-- Conditional Order Fields -->
-                                                <div x-show="statusUpdate === 'converted'" class="bg-green-50 p-4 rounded-lg border border-green-200">
-                                                    <h4 class="font-bold text-green-800 mb-2 flex items-center">
-                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                                        Initial Order Details
-                                                    </h4>
-                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                        <div>
-                                                            <label class="block text-gray-700 text-xs font-bold mb-1">Medicine Given</label>
-                                                            <select name="medicine_id" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-200">
-                                                                <option value="">Select Medicine...</option>
-                                                                @foreach($medicines as $med)
-                                                                    <option value="{{ $med->id }}">{{ $med->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div>
-                                                            <label class="block text-gray-700 text-xs font-bold mb-1">Packs Created</label>
-                                                            <input type="number" name="packs_ordered" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-200" min="1" value="1">
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm shadow-purple-200">
-                                                    Save Activity & Update
-                                                </button>
-                                                <button type="button" @click="openLog = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-4 py-3 text-sm text-center text-gray-500">
-                            No pending leads assigned to you.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                            <!-- Log Activity (Primary Action) -->
+                            <button @click="openLogModal({{ $lead->id }}, '{{ addslashes($lead->name ?: $lead->phone) }}', '{{ $lead->lead_quality ?? 'warm' }}')"
+                                    class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-hoot-dark hover:bg-hoot-green text-white rounded-lg font-medium text-sm transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Log Activity
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="bg-white rounded-xl border border-gray-100 p-8 text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-1">All caught up!</h3>
+                    <p class="text-sm text-gray-500">No pending leads assigned to you right now.</p>
+                </div>
+            @endforelse
         </div>
-        <div class="px-4 py-3 border-t bg-gray-50">
-            {{ $leads->links() }}
+
+        <!-- Pagination -->
+        @if($leads->hasPages())
+            <div class="bg-white rounded-xl border border-gray-100 px-4 py-3">
+                {{ $leads->links() }}
+            </div>
+        @endif
+
+        <!-- Log Activity Bottom Sheet Modal -->
+        <div x-show="showLogModal" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50" 
+             style="display: none;">
+            
+            <!-- Backdrop -->
+            <div class="fixed inset-0 bg-black/50" @click="closeLogModal()"></div>
+            
+            <!-- Bottom Sheet -->
+            <div x-show="showLogModal"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="translate-y-full"
+                 x-transition:enter-end="translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="translate-y-0"
+                 x-transition:leave-end="translate-y-full"
+                 class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[90vh] overflow-y-auto safe-bottom">
+                
+                <!-- Handle -->
+                <div class="sticky top-0 bg-white pt-3 pb-2 px-4 border-b border-gray-100">
+                    <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-3"></div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-semibold text-gray-900">Log Activity</h3>
+                        <button @click="closeLogModal()" class="p-1 text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1" x-text="'For ' + currentLeadName"></p>
+                </div>
+
+                <form :action="'/portal/leads/' + currentLeadId + '/activity'" method="POST" class="p-4 space-y-4">
+                    @csrf
+                    
+                    <!-- Activity Type - Quick Select -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">What did you do?</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="relative">
+                                <input type="radio" name="type" value="call" class="peer sr-only" checked>
+                                <div class="p-3 border-2 border-gray-200 rounded-xl text-center cursor-pointer peer-checked:border-hoot-green peer-checked:bg-hoot-light transition-all">
+                                    <svg class="w-6 h-6 mx-auto mb-1 text-gray-600 peer-checked:text-hoot-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium">Call</span>
+                                </div>
+                            </label>
+                            <label class="relative">
+                                <input type="radio" name="type" value="whatsapp" class="peer sr-only">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl text-center cursor-pointer peer-checked:border-hoot-green peer-checked:bg-hoot-light transition-all">
+                                    <svg class="w-6 h-6 mx-auto mb-1 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                    </svg>
+                                    <span class="text-xs font-medium">WhatsApp</span>
+                                </div>
+                            </label>
+                            <label class="relative">
+                                <input type="radio" name="type" value="note" class="peer sr-only">
+                                <div class="p-3 border-2 border-gray-200 rounded-xl text-center cursor-pointer peer-checked:border-hoot-green peer-checked:bg-hoot-light transition-all">
+                                    <svg class="w-6 h-6 mx-auto mb-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    <span class="text-xs font-medium">Note</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Outcome - Smart Suggestions -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">What happened?</label>
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <button type="button" @click="result = 'Interested'" 
+                                    :class="result === 'Interested' ? 'bg-hoot-green text-white border-hoot-green' : 'bg-white text-gray-700 border-gray-200'"
+                                    class="px-3 py-1.5 border rounded-full text-sm font-medium transition-colors">
+                                Interested
+                            </button>
+                            <button type="button" @click="result = 'No Answer'" 
+                                    :class="result === 'No Answer' ? 'bg-hoot-green text-white border-hoot-green' : 'bg-white text-gray-700 border-gray-200'"
+                                    class="px-3 py-1.5 border rounded-full text-sm font-medium transition-colors">
+                                No Answer
+                            </button>
+                            <button type="button" @click="result = 'Call Later'" 
+                                    :class="result === 'Call Later' ? 'bg-hoot-green text-white border-hoot-green' : 'bg-white text-gray-700 border-gray-200'"
+                                    class="px-3 py-1.5 border rounded-full text-sm font-medium transition-colors">
+                                Call Later
+                            </button>
+                            <button type="button" @click="result = 'Not Interested'" 
+                                    :class="result === 'Not Interested' ? 'bg-hoot-green text-white border-hoot-green' : 'bg-white text-gray-700 border-gray-200'"
+                                    class="px-3 py-1.5 border rounded-full text-sm font-medium transition-colors">
+                                Not Interested
+                            </button>
+                        </div>
+                        <input type="text" name="result" x-model="result" 
+                               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-hoot-green/20 focus:border-hoot-green" 
+                               placeholder="Or type your own..." required>
+                    </div>
+
+                    <!-- Lead Temperature Update -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Lead temperature</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="relative">
+                                <input type="radio" name="lead_quality" value="hot" class="peer sr-only" :checked="currentLeadQuality === 'hot'">
+                                <div class="p-2 border-2 border-gray-200 rounded-xl text-center cursor-pointer peer-checked:border-red-400 peer-checked:bg-red-50 transition-all">
+                                    <span class="text-lg">🔥</span>
+                                    <span class="block text-xs font-medium text-gray-600">Hot</span>
+                                </div>
+                            </label>
+                            <label class="relative">
+                                <input type="radio" name="lead_quality" value="warm" class="peer sr-only" :checked="currentLeadQuality === 'warm'">
+                                <div class="p-2 border-2 border-gray-200 rounded-xl text-center cursor-pointer peer-checked:border-amber-400 peer-checked:bg-amber-50 transition-all">
+                                    <span class="text-lg">☀️</span>
+                                    <span class="block text-xs font-medium text-gray-600">Warm</span>
+                                </div>
+                            </label>
+                            <label class="relative">
+                                <input type="radio" name="lead_quality" value="cold" class="peer sr-only" :checked="currentLeadQuality === 'cold'">
+                                <div class="p-2 border-2 border-gray-200 rounded-xl text-center cursor-pointer peer-checked:border-blue-400 peer-checked:bg-blue-50 transition-all">
+                                    <span class="text-lg">❄️</span>
+                                    <span class="block text-xs font-medium text-gray-600">Cold</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Optional Notes -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Notes <span class="text-gray-400 font-normal">(optional)</span></label>
+                        <textarea name="notes" rows="2" 
+                                  class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-hoot-green/20 focus:border-hoot-green resize-none" 
+                                  placeholder="Any additional details..."></textarea>
+                    </div>
+
+                    <!-- Status Update -->
+                    <div class="border-t border-gray-100 pt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Update status</label>
+                        <select name="status_update" x-model="statusUpdate" 
+                                class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-hoot-green/20 focus:border-hoot-green bg-white">
+                            <option value="">Keep current status</option>
+                            <option value="contacted">Mark as Contacted</option>
+                            <option value="negotiating">Negotiating</option>
+                            <option value="converted">Convert to Patient</option>
+                            <option value="lost">Mark as Lost</option>
+                        </select>
+                    </div>
+
+                    <!-- Conversion Fields (Shown when converting) -->
+                    <div x-show="statusUpdate === 'converted'" x-transition class="bg-green-50 rounded-xl p-4 border border-green-200">
+                        <h4 class="font-medium text-green-800 mb-3 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Create first order
+                        </h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Medicine</label>
+                                <select name="medicine_id" class="w-full px-3 py-2 border border-green-300 rounded-lg text-sm focus:ring-2 focus:ring-green-200 focus:border-green-400 bg-white">
+                                    <option value="">Select medicine...</option>
+                                    @foreach($medicines as $med)
+                                        <option value="{{ $med->id }}">{{ $med->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Packs ordered</label>
+                                <input type="number" name="packs_ordered" value="1" min="1" 
+                                       class="w-full px-3 py-2 border border-green-300 rounded-lg text-sm focus:ring-2 focus:ring-green-200 focus:border-green-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="sticky bottom-0 bg-white pt-2 pb-4 -mx-4 px-4 border-t border-gray-100 mt-4">
+                        <button type="submit" 
+                                :disabled="isSubmitting"
+                                class="w-full py-3 bg-hoot-dark hover:bg-hoot-green text-white rounded-xl font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                            <svg x-show="isSubmitting" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span x-text="isSubmitting ? 'Saving...' : 'Save Activity'"></span>
+                        </button>
+                        <p class="text-xs text-center text-gray-400 mt-2">You can update this later</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tutorial Modal -->
+        <div x-show="showTutorial" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" 
+             style="display: none;">
+            
+            <div class="fixed inset-0 bg-black/50" @click="showTutorial = false"></div>
+            
+            <div x-show="showTutorial"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="translate-y-full sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="translate-y-0 sm:scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="translate-y-0 sm:scale-100"
+                 x-transition:leave-end="translate-y-full sm:translate-y-0 sm:scale-95"
+                 class="relative bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md overflow-hidden">
+                
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-semibold text-gray-900" x-text="tutorialSteps[tutorialStep].title"></h3>
+                        <button @click="showTutorial = false" class="text-gray-400 hover:text-gray-600 p-1">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Tutorial Icon -->
+                    <div class="bg-hoot-light rounded-xl p-6 mb-4 flex items-center justify-center">
+                        <div class="text-hoot-green" x-html="tutorialSteps[tutorialStep].icon"></div>
+                    </div>
+                    
+                    <p class="text-gray-600 text-sm mb-6" x-text="tutorialSteps[tutorialStep].description"></p>
+                    
+                    <!-- Progress Dots -->
+                    <div class="flex justify-center gap-2 mb-4">
+                        <template x-for="(step, index) in tutorialSteps" :key="index">
+                            <span :class="index === tutorialStep ? 'bg-hoot-green' : 'bg-gray-200'" class="w-2 h-2 rounded-full transition-colors"></span>
+                        </template>
+                    </div>
+                    
+                    <!-- Navigation -->
+                    <div class="flex gap-3">
+                        <button x-show="tutorialStep > 0" @click="tutorialStep--" 
+                                class="flex-1 py-2.5 text-gray-600 bg-gray-100 rounded-xl font-medium text-sm hover:bg-gray-200 transition-colors">
+                            Back
+                        </button>
+                        <button x-show="tutorialStep < tutorialSteps.length - 1" @click="tutorialStep++" 
+                                class="flex-1 py-2.5 text-white bg-hoot-dark rounded-xl font-medium text-sm hover:bg-hoot-green transition-colors">
+                            Next
+                        </button>
+                        <button x-show="tutorialStep === tutorialSteps.length - 1" @click="completeTutorial()" 
+                                class="flex-1 py-2.5 text-white bg-hoot-dark rounded-xl font-medium text-sm hover:bg-hoot-green transition-colors">
+                            Got it!
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        function leadsPage() {
+            return {
+                showLogModal: false,
+                showTutorial: false,
+                showTutorialHint: true,
+                currentLeadId: null,
+                currentLeadName: '',
+                currentLeadQuality: 'warm',
+                result: '',
+                statusUpdate: '',
+                isSubmitting: false,
+                tutorialStep: 0,
+                tutorialSteps: [
+                    {
+                        title: 'Your Lead List',
+                        description: 'This page shows all leads assigned to you. Hot leads and those without recent activity appear first - they need your attention most.',
+                        icon: '<svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>'
+                    },
+                    {
+                        title: 'Contact with One Tap',
+                        description: 'Tap the green WhatsApp button to message instantly, or the blue button to call. No need to copy numbers - just tap and connect.',
+                        icon: '<svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>'
+                    },
+                    {
+                        title: 'Log Every Activity',
+                        description: 'After contacting a lead, tap "Log Activity" to record what happened. Choose from quick options or type your own. This helps you track progress.',
+                        icon: '<svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>'
+                    },
+                    {
+                        title: 'Convert to Patient',
+                        description: 'When a lead is ready to buy, select "Convert to Patient" in the status dropdown. Add their first order details and they will move to your patients list.',
+                        icon: '<svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                    }
+                ],
+
+                openLogModal(leadId, leadName, leadQuality) {
+                    this.currentLeadId = leadId;
+                    this.currentLeadName = leadName;
+                    this.currentLeadQuality = leadQuality || 'warm';
+                    this.result = '';
+                    this.statusUpdate = '';
+                    this.showLogModal = true;
+                    document.body.style.overflow = 'hidden';
+                },
+
+                closeLogModal() {
+                    this.showLogModal = false;
+                    document.body.style.overflow = '';
+                },
+
+                startTutorial() {
+                    this.tutorialStep = 0;
+                    this.showTutorial = true;
+                },
+
+                dismissTutorialHint() {
+                    this.showTutorialHint = false;
+                    localStorage.setItem('leads_tutorial_dismissed', 'true');
+                },
+
+                completeTutorial() {
+                    this.showTutorial = false;
+                    localStorage.setItem('leads_tutorial_done', 'true');
+                    this.dismissTutorialHint();
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+    </style>
 </x-app-layout>

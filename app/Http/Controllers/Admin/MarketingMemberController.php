@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Patient;
 use App\Models\User;
 use App\Models\MarketingTarget;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -109,7 +111,14 @@ class MarketingMemberController extends Controller
             abort(403);
         }
 
-        $marketing_member->delete();
+        DB::transaction(function () use ($marketing_member) {
+            Patient::where('assigned_by', $marketing_member->id)->update([
+                'assigned_by' => null,
+                'assigned_at' => null,
+            ]);
+
+            $marketing_member->delete();
+        });
 
         return redirect()->route('admin.marketing-members.index')
             ->with('success', 'Marketing Member deleted successfully.');
