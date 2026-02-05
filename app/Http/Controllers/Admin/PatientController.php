@@ -9,6 +9,29 @@ use Illuminate\Http\Request;
 
 class PatientController extends Controller
 {
+    private function getCompanyDirectRepresentative(): Representative
+    {
+        $user = auth()->user();
+
+        $existing = Representative::where('user_id', $user->id)->first();
+        if ($existing) {
+            if ($existing->phone === 'N/A' && ($existing->country === 'Company Direct' || empty($existing->country))) {
+                $existing->update(['country' => 'India']);
+            }
+            return $existing;
+        }
+
+        return Representative::create([
+            'user_id' => $user->id,
+            'country' => 'India',
+            'country_code' => null,
+            'region' => null,
+            'phone' => 'N/A',
+            'address' => null,
+            'status' => 'active',
+        ]);
+    }
+
     public function index(Request $request)
     {
         $query = Patient::with(['representative.user']);
@@ -49,7 +72,7 @@ class PatientController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'representative_id' => 'required|exists:representatives,id',
+            'representative_id' => 'nullable|exists:representatives,id',
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
             'phone' => 'required|string|max:50',
@@ -57,6 +80,10 @@ class PatientController extends Controller
             'address' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
+
+        if (empty($validated['representative_id'])) {
+            $validated['representative_id'] = $this->getCompanyDirectRepresentative()->id;
+        }
 
         Patient::create($validated);
 
@@ -79,7 +106,7 @@ class PatientController extends Controller
     public function update(Request $request, Patient $patient)
     {
         $validated = $request->validate([
-            'representative_id' => 'required|exists:representatives,id',
+            'representative_id' => 'nullable|exists:representatives,id',
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
             'phone' => 'required|string|max:50',
@@ -87,6 +114,10 @@ class PatientController extends Controller
             'address' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
+
+        if (empty($validated['representative_id'])) {
+            $validated['representative_id'] = $this->getCompanyDirectRepresentative()->id;
+        }
 
         $patient->update($validated);
 

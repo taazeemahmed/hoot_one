@@ -60,7 +60,7 @@
                                             <select v-model="form.representative_id" @change="updateCountry" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all outline-none font-medium appearance-none cursor-pointer">
                                                 <option value="" disabled>Select a Representative...</option>
                                                 <option v-for="rep in representatives" :key="rep.id" :value="rep.id" :data-country="rep.country">
-                                                    {{ rep.user.name }} - {{ rep.country }}
+                                                    {{ rep.display_name || (rep.user?.name ? (rep.user.name + ' - ' + rep.country) : rep.country) }}
                                                 </option>
                                             </select>
                                             <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -217,7 +217,7 @@ const getInitials = (name) => {
 
 const getRepName = (id) => {
     const rep = props.representatives.find(r => r.id === id);
-    return rep ? rep.user.name : 'Unknown';
+    return rep ? (rep.display_name || rep.user?.name || 'Unknown') : 'Unknown';
 };
 
 const updateCountry = () => {

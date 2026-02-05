@@ -11,14 +11,15 @@
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <!-- Representative Selection -->
                 <div class="col-span-2">
-                     <label class="block text-sm text-gray-700">Assign Representative</label>
-                    <select name="representative_id" required class="block w-full mt-1 border-gray-300 rounded-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50">
+                     <label class="block text-sm text-gray-700">Assign Representative (Optional)</label>
+                    <select name="representative_id" class="block w-full mt-1 border-gray-300 rounded-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50">
                         <option value="">Select Representative</option>
                         @foreach($representatives as $rep)
                             <option value="{{ $rep->id }}" {{ old('representative_id') == $rep->id ? 'selected' : '' }}>{{ $rep->user->name }} ({{ $rep->country }})</option>
                         @endforeach
                     </select>
                     @error('representative_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <p class="mt-1 text-xs text-gray-500">Leave blank for company direct / super admin orders (international patients).</p>
                 </div>
 
                 <!-- Personal Information -->

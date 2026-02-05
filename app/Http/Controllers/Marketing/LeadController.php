@@ -6,11 +6,43 @@ use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\LeadActivity;
 use App\Models\Representative;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LeadController extends Controller
 {
+    private function getCompanyDirectRepresentative(): ?Representative
+    {
+        $superAdmin = User::query()
+            ->where('role', 'super_admin')
+            ->orderBy('id')
+            ->first();
+
+        if (!$superAdmin) {
+            return null;
+        }
+
+        $rep = Representative::where('user_id', $superAdmin->id)->first();
+        if ($rep) {
+            // If this looks like our previously auto-created Company Direct rep, normalize its country.
+            if ($rep->phone === 'N/A' && ($rep->country === 'Company Direct' || empty($rep->country))) {
+                $rep->update(['country' => 'India']);
+            }
+            return $rep;
+        }
+
+        return Representative::create([
+            'user_id' => $superAdmin->id,
+            'country' => 'India',
+            'country_code' => null,
+            'region' => null,
+            'phone' => 'N/A',
+            'address' => null,
+            'status' => 'active',
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      * CRITICAL: Marketing members can ONLY see leads they personally added (assigned_by = their user ID)
@@ -42,7 +74,21 @@ class LeadController extends Controller
         $convertedCount = Patient::where('assigned_by', $userId)->where('lead_status', 'converted')->count();
 
         // For assignment modal
+        $companyDirect = $this->getCompanyDirectRepresentative();
+
         $representatives = Representative::with('user')->where('status', 'active')->get();
+        if ($companyDirect && !$representatives->contains('id', $companyDirect->id)) {
+            $representatives->push($companyDirect->load('user'));
+        }
+
+        $representatives->each(function ($rep) use ($companyDirect) {
+            $rep->setAttribute(
+                'display_name',
+                ($companyDirect && $rep->id === $companyDirect->id)
+                    ? 'Company Direct - ' . ($rep->country ?? 'India')
+                    : (($rep->user->name ?? 'Representative') . ' - ' . ($rep->country ?? ''))
+            );
+        });
 
         return view('marketing.leads.index', compact('leads', 'representatives', 'totalCount', 'hotCount', 'newCount', 'assignedCount', 'convertedCount'));
     }
@@ -52,7 +98,22 @@ class LeadController extends Controller
      */
     public function create()
     {
+        $companyDirect = $this->getCompanyDirectRepresentative();
+
         $representatives = Representative::with('user')->where('status', 'active')->get();
+        if ($companyDirect && !$representatives->contains('id', $companyDirect->id)) {
+            $representatives->push($companyDirect->load('user'));
+        }
+
+        $representatives->each(function ($rep) use ($companyDirect) {
+            $rep->setAttribute(
+                'display_name',
+                ($companyDirect && $rep->id === $companyDirect->id)
+                    ? 'Company Direct - ' . ($rep->country ?? 'India')
+                    : (($rep->user->name ?? 'Representative') . ' - ' . ($rep->country ?? ''))
+            );
+        });
+
         return view('marketing.leads.create', compact('representatives'));
     }
 

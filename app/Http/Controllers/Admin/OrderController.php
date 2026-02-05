@@ -13,6 +13,29 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
+    private function getCompanyDirectRepresentative(): Representative
+    {
+        $user = auth()->user();
+
+        $existing = Representative::where('user_id', $user->id)->first();
+        if ($existing) {
+            if ($existing->phone === 'N/A' && ($existing->country === 'Company Direct' || empty($existing->country))) {
+                $existing->update(['country' => 'India']);
+            }
+            return $existing;
+        }
+
+        return Representative::create([
+            'user_id' => $user->id,
+            'country' => 'India',
+            'country_code' => null,
+            'region' => null,
+            'phone' => 'N/A',
+            'address' => null,
+            'status' => 'active',
+        ]);
+    }
+
     public function index(Request $request)
     {
         $query = Order::with(['patient', 'medicine', 'representative.user']);
@@ -136,15 +159,37 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
             'medicine_id' => 'required|exists:medicines,id',
             'packs_ordered' => 'required|integer|min:1',
             'treatment_start_date' => 'required|date',
             'notes' => 'nullable|string',
-            'status' => 'required|in:active,completed,cancelled',
+            'status' => 'nullable|in:active,completed,cancelled',
+            'create_new_patient' => 'sometimes|boolean',
+            'patient_id' => 'required_without:create_new_patient|nullable|exists:patients,id',
+            'new_patient_name' => 'required_with:create_new_patient|nullable|string|max:255',
+            'new_patient_email' => 'nullable|email|max:255',
+            'new_patient_phone' => 'required_with:create_new_patient|nullable|string|max:50',
+            'new_patient_country' => 'required_with:create_new_patient|nullable|string|max:255',
+            'new_patient_address' => 'nullable|string',
+            'new_patient_notes' => 'nullable|string',
         ]);
 
-        $patient = Patient::findOrFail($validated['patient_id']);
+        if ($request->boolean('create_new_patient')) {
+            $companyRep = $this->getCompanyDirectRepresentative();
+
+            $patient = Patient::create([
+                'representative_id' => $companyRep->id,
+                'name' => $request->new_patient_name,
+                'email' => $request->new_patient_email ?? null,
+                'phone' => $request->new_patient_phone,
+                'country' => $request->new_patient_country,
+                'address' => $request->new_patient_address ?? null,
+                'notes' => $request->new_patient_notes ?? 'Created instantly from Admin Order page',
+            ]);
+        } else {
+            $patient = Patient::findOrFail($validated['patient_id']);
+        }
+
         $medicine = Medicine::findOrFail($validated['medicine_id']);
 
         // Calculate expected renewal date
@@ -155,14 +200,14 @@ class OrderController extends Controller
         );
 
         Order::create([
-            'patient_id' => $validated['patient_id'],
+            'patient_id' => $patient->id,
             'medicine_id' => $validated['medicine_id'],
             'representative_id' => $patient->representative_id,
             'packs_ordered' => $validated['packs_ordered'],
             'treatment_start_date' => $validated['treatment_start_date'],
             'expected_renewal_date' => $renewalDate,
             'notes' => $validated['notes'] ?? null,
-            'status' => $validated['status'],
+            'status' => $validated['status'] ?? 'active',
         ]);
 
         return redirect()->route('admin.orders.index')
