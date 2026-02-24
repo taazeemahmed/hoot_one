@@ -62,7 +62,7 @@
                                         'assigned' => 'bg-amber-100 text-amber-700',
                                         'contacted' => 'bg-cyan-100 text-cyan-700',
                                         'negotiating' => 'bg-purple-100 text-purple-700',
-                                        'converted' => 'bg-emerald-100 text-emerald-700',
+                                        'converted' => 'bg-orange-100 text-orange-700',
                                         'lost' => 'bg-red-100 text-red-700',
                                         'not_interested' => 'bg-gray-100 text-gray-700',
                                     ];
@@ -158,7 +158,7 @@
                                             'whatsapp' => 'bg-green-100 text-green-600',
                                             'note' => 'bg-gray-100 text-gray-600',
                                             'assignment' => 'bg-purple-100 text-purple-600',
-                                            'conversion' => 'bg-emerald-100 text-emerald-600',
+                                            'conversion' => 'bg-orange-100 text-orange-600',
                                         ];
                                     @endphp
                                     <div class="w-8 h-8 rounded-full flex items-center justify-center {{ $typeColors[$activity->type] ?? 'bg-gray-100 text-gray-600' }}">
@@ -216,7 +216,7 @@
                                 <p class="text-sm text-gray-500">{{ $order->packs_ordered }} pack(s) &bull; Started {{ $order->treatment_start_date->format('M d, Y') }}</p>
                             </div>
                             <div class="text-right">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $order->status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-700' }}">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $order->status === 'active' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700' }}">
                                     {{ ucfirst($order->status) }}
                                 </span>
                                 <p class="text-xs text-gray-500 mt-1">Renewal: {{ $order->expected_renewal_date->format('M d, Y') }}</p>
@@ -309,7 +309,7 @@
                         </div>
                     </div>
                     <div class="flex gap-3 mt-6">
-                        <button type="button" onclick="document.getElementById('activityModal').classList.add('hidden')" 
+                        <button type="button" onclick="document.getElementById('activityModal').classList.add('hidden')"
                                 class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
                             Cancel
                         </button>

@@ -10,7 +10,7 @@
     </div>
 
     @if(session('success'))
-        <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
+        <div class="p-4 mb-4 text-sm text-orange-700 bg-orange-100 rounded-lg dark:bg-orange-200 dark:text-orange-800" role="alert">
             {{ session('success') }}
         </div>
     @endif
@@ -48,7 +48,7 @@
                                 $target = $member->marketingTargets->first();
                             @endphp
                             @if($target)
-                                <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full">
+                                <span class="px-2 py-1 font-semibold leading-tight text-orange-700 bg-orange-100 rounded-full">
                                     {{ $target->leads_assigned_target }} / month
                                 </span>
                             @else

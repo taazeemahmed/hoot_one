@@ -69,7 +69,7 @@
                             {{ $rep->phone }}
                         </td>
                         <td class="px-4 py-3 text-xs">
-                            <span class="px-2 py-1 font-semibold leading-tight {{ $rep->status == 'active' ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100' }} rounded-full">
+                            <span class="px-2 py-1 font-semibold leading-tight {{ $rep->status == 'active' ? 'text-orange-700 bg-orange-100' : 'text-red-700 bg-red-100' }} rounded-full">
                                 {{ ucfirst($rep->status) }}
                             </span>
                         </td>

@@ -34,7 +34,7 @@
                 <div class="relative z-10">
                     <p class="text-sm font-semibold text-gray-500 uppercase tracking-widest">Total Pending</p>
                     <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ stats.new_leads }}</h3>
-                    <div class="flex items-center mt-2 text-xs font-medium text-emerald-600">
+                    <div class="flex items-center mt-2 text-xs font-medium text-orange-600">
                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                         <span>+12% vs last week</span>
                     </div>
@@ -93,7 +93,7 @@
                     <div class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white border border-white/10">
                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     </div>
-                    <span class="text-2xl font-bold text-emerald-400">{{ score.percentage }}%</span>
+                    <span class="text-2xl font-bold text-orange-400">{{ score.percentage }}%</span>
                 </div>
                 <div class="relative z-10">
                     <p class="text-sm font-semibold text-gray-400 uppercase tracking-widest">Monthly Goal</p>
@@ -102,7 +102,7 @@
                         <span class="text-gray-500 text-sm font-medium">/ {{ score.target_assigned }}</span>
                     </div>
                     <div class="w-full bg-gray-700 h-1.5 rounded-full mt-3 overflow-hidden">
-                         <div class="bg-gradient-to-r from-emerald-400 to-teal-400 h-full rounded-full transition-all duration-1000" :style="{ width: `${Math.min(score.percentage, 100)}%` }"></div>
+                         <div class="bg-gradient-to-r from-orange-400 to-amber-400 h-full rounded-full transition-all duration-1000" :style="{ width: `${Math.min(score.percentage, 100)}%` }"></div>
                     </div>
                     <p class="text-xs text-gray-400 mt-2">{{ Math.max(0, score.target_assigned - score.leads_assigned) }} more to reach target</p>
                 </div>
@@ -111,10 +111,10 @@
 
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            
+
             <!-- Left: Charts & Tables -->
             <div class="xl:col-span-2 space-y-8">
-                
+
                 <!-- Assignment Velocity Chart -->
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100/60">
                     <div class="flex items-center justify-between mb-6">
@@ -178,7 +178,7 @@
                                          <span v-else-if="lead.lead_quality === 'cold'" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-100 text-gray-600">
                                             ❄️ Cold
                                         </span>
-                                        <span v-else class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
+                                        <span v-else class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-100 text-orange-700">
                                             👤 Patient
                                         </span>
                                     </td>
@@ -205,11 +205,11 @@
 
             <!-- Right: Sidebar widgets -->
              <div class="space-y-8">
-                
+
                 <!-- Quick Actions -->
                 <div class="bg-gradient-to-br from-purple-700 to-indigo-800 rounded-2xl p-6 text-white shadow-xl shadow-indigo-900/20 relative overflow-hidden group">
                      <div class="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/15 transition-colors"></div>
-                    
+
                     <div class="flex items-center justify-between mb-6 relative z-10">
                         <h3 class="text-lg font-bold">Quick Actions</h3>
                         <div class="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
@@ -230,7 +230,7 @@
                         </a>
 
                         <a href="/marketing/leads?status=new" class="flex items-center p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all border border-white/5 hover:border-white/20 backdrop-blur-sm group/item">
-                            <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20 mr-4 group-hover/item:scale-105 transition-transform">
+                            <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center shadow-lg shadow-orange-500/20 mr-4 group-hover/item:scale-105 transition-transform">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                             </div>
                             <div class="flex-1">

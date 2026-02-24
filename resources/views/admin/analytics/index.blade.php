@@ -24,7 +24,7 @@
                                 <dd class="flex items-baseline">
                                     <div class="text-2xl font-bold text-gray-900">{{ number_format($kpis['totalLeads']) }}</div>
                                     @if($kpis['leadsGrowth'] > 0)
-                                    <span class="ml-2 text-sm font-medium text-green-600">+{{ $kpis['leadsGrowth'] }}%</span>
+                                    <span class="ml-2 text-sm font-medium text-orange-600">+{{ $kpis['leadsGrowth'] }}%</span>
                                     @endif
                                 </dd>
                             </dl>
@@ -36,8 +36,8 @@
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl">
                 <div class="p-6">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0 p-3 rounded-xl bg-green-50">
-                            <svg class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="flex-shrink-0 p-3 rounded-xl bg-orange-50">
+                            <svg class="h-8 w-8 text-hoot-maroon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
@@ -160,7 +160,7 @@
                                 'assigned' => ['bg' => 'bg-indigo-500', 'light' => 'bg-indigo-100'],
                                 'contacted' => ['bg' => 'bg-purple-500', 'light' => 'bg-purple-100'],
                                 'negotiating' => ['bg' => 'bg-amber-500', 'light' => 'bg-amber-100'],
-                                'converted' => ['bg' => 'bg-green-500', 'light' => 'bg-green-100'],
+                                'converted' => ['bg' => 'bg-orange-500', 'light' => 'bg-orange-100'],
                                 'lost' => ['bg' => 'bg-red-500', 'light' => 'bg-red-100'],
                             ];
                         @endphp
@@ -222,7 +222,7 @@
                                 {{ number_format($country->total) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                                     {{ number_format($country->converted) }}
                                 </span>
                             </td>
@@ -238,7 +238,7 @@
                                 <div class="flex items-center">
                                     <span class="text-sm font-medium text-gray-900">{{ number_format($rate, 1) }}%</span>
                                     <div class="ml-2 w-16 bg-gray-200 rounded-full h-2">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: {{ min($rate, 100) }}%"></div>
+                                        <div class="bg-orange-500 h-2 rounded-full" style="width: {{ min($rate, 100) }}%"></div>
                                     </div>
                                 </div>
                             </td>
@@ -261,7 +261,7 @@
     // Monthly Trends Chart
     const monthlyTrendsCtx = document.getElementById('monthlyTrendsChart').getContext('2d');
     const monthlyData = @json($monthlyTrends);
-    
+
     new Chart(monthlyTrendsCtx, {
         type: 'line',
         data: {
@@ -300,7 +300,7 @@
     // Source Chart
     const sourceCtx = document.getElementById('sourceChart').getContext('2d');
     const sourceData = @json($conversionBySource);
-    
+
     new Chart(sourceCtx, {
         type: 'doughnut',
         data: {

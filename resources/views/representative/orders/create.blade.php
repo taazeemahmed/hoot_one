@@ -1,19 +1,19 @@
 <x-app-layout>
     {{-- Mobile-First Create Order - Clean, Calm, Professional --}}
     <div x-data="orderForm()" x-init="init()" class="min-h-screen pb-32 lg:pb-8">
-        
+
         {{-- Compact Header --}}
         <div class="mb-4 sm:mb-6">
             <div class="flex items-center gap-3">
-                <a href="{{ route('representative.orders.index') }}" 
-                   class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors">
+                <a href="{{ route('representative.orders.index') }}"
+                   class="w-10 h-10 flex items-center justify-center rounded-full bg-corp-50 hover:bg-corp-100 text-corp-400 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </a>
                 <div>
-                    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800">New Order</h1>
-                    <p class="text-sm text-gray-500 hidden sm:block">Record a medicine order for your patient</p>
+                    <h1 class="text-xl sm:text-2xl font-semibold text-corp-900">New Order</h1>
+                    <p class="text-sm text-corp-400 hidden sm:block">Record a medicine order for your patient</p>
                 </div>
             </div>
         </div>
@@ -36,21 +36,21 @@
 
         <form action="{{ route('representative.orders.store') }}" method="POST" @submit="handleSubmit">
             @csrf
-            
+
             <div class="space-y-4 sm:space-y-6">
-                
+
                 {{-- ═══════════════════════════════════════════════════════════════
                      SECTION 1: PATIENT SELECTION
                 ═══════════════════════════════════════════════════════════════ --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-100 bg-gray-50/50">
+                <div class="bg-white rounded-2xl shadow-sm border border-corp-100 overflow-hidden">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-corp-100 bg-corp-50/50">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <span class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold">1</span>
-                                <h2 class="font-semibold text-gray-800">Patient</h2>
+                                <span class="w-7 h-7 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-sm font-bold">1</span>
+                                <h2 class="font-semibold text-corp-900">Patient</h2>
                             </div>
                             <template x-if="selectedId || createNew">
-                                <span class="text-emerald-600">
+                                <span class="text-orange-600">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                     </svg>
@@ -58,18 +58,18 @@
                             </template>
                         </div>
                     </div>
-                    
+
                     <div class="p-4 sm:p-6">
                         {{-- Search Existing Patient --}}
                         <div x-show="!createNew" class="space-y-4">
                             <input type="hidden" name="patient_id" x-model="selectedId">
-                            
+
                             {{-- Selected Patient Card --}}
-                            <div x-show="selectedId" x-transition class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                            <div x-show="selectedId" x-transition class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <div class="w-10 h-10 rounded-full bg-orange-200 flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-hoot-maroon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                             </svg>
                                         </div>
@@ -78,8 +78,8 @@
                                             <p class="text-sm text-gray-500" x-text="selectedPhone"></p>
                                         </div>
                                     </div>
-                                    <button type="button" @click="clearPatient()" 
-                                            class="text-sm text-emerald-700 hover:text-emerald-900 font-medium px-3 py-1.5 hover:bg-emerald-100 rounded-lg transition-colors">
+                                    <button type="button" @click="clearPatient()"
+                                            class="text-sm text-orange-700 hover:text-orange-900 font-medium px-3 py-1.5 hover:bg-orange-100 rounded-lg transition-colors">
                                         Change
                                     </button>
                                 </div>
@@ -91,23 +91,23 @@
                                     <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                     </svg>
-                                    <input type="text" 
+                                    <input type="text"
                                            x-model="search"
                                            @focus="showDropdown = true"
                                            @input="showDropdown = true"
                                            placeholder="Search patient by name or phone..."
-                                           class="block w-full pl-12 pr-4 py-4 text-base border border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                           class="block w-full pl-12 pr-4 py-4 text-base border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all"
                                            autocomplete="off">
                                 </div>
 
                                 {{-- Dropdown Results --}}
-                                <div x-show="showDropdown && (filteredPatients.length > 0 || search.length > 1)" 
+                                <div x-show="showDropdown && (filteredPatients.length > 0 || search.length > 1)"
                                      @click.away="showDropdown = false"
                                      class="absolute z-20 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto"
                                      x-cloak>
                                     <template x-for="patient in filteredPatients" :key="patient.id">
                                         <button type="button"
-                                                @click="selectPatient(patient)" 
+                                                @click="selectPatient(patient)"
                                                 class="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 border-b border-gray-100 last:border-0 transition-colors text-left">
                                             <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                                                 <span class="text-sm font-medium text-gray-600" x-text="patient.name.charAt(0).toUpperCase()"></span>
@@ -118,11 +118,11 @@
                                             </div>
                                         </button>
                                     </template>
-                                    <div x-show="filteredPatients.length === 0 && search.length > 1" 
+                                    <div x-show="filteredPatients.length === 0 && search.length > 1"
                                          class="p-4 text-center text-gray-500">
                                         <p class="mb-2">No patients found</p>
-                                        <button type="button" @click="startNewPatient()" 
-                                                class="text-emerald-600 font-medium hover:text-emerald-700">
+                                        <button type="button" @click="startNewPatient()"
+                                                class="text-orange-600 font-medium hover:text-orange-700">
                                             + Create new patient
                                         </button>
                                     </div>
@@ -131,8 +131,8 @@
 
                             {{-- Quick Add Button --}}
                             <div x-show="!selectedId" class="pt-2">
-                                <button type="button" @click="startNewPatient()" 
-                                        class="w-full py-3 px-4 border-2 border-dashed border-gray-200 rounded-xl text-gray-600 hover:border-emerald-300 hover:text-emerald-600 hover:bg-emerald-50/50 transition-all flex items-center justify-center gap-2 font-medium">
+                                <button type="button" @click="startNewPatient()"
+                                        class="w-full py-3 px-4 border-2 border-dashed border-gray-200 rounded-xl text-gray-600 hover:border-orange-300 hover:text-orange-600 hover:bg-orange-50/50 transition-all flex items-center justify-center gap-2 font-medium">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                                     </svg>
@@ -144,10 +144,10 @@
                         {{-- New Patient Inline Form --}}
                         <div x-show="createNew" x-transition class="space-y-4">
                             <input type="hidden" name="create_new_patient" :value="createNew ? '1' : '0'">
-                            
+
                             <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                                 <span class="font-medium text-gray-700">New Patient</span>
-                                <button type="button" @click="cancelNewPatient()" 
+                                <button type="button" @click="cancelNewPatient()"
                                         class="text-sm text-gray-500 hover:text-gray-700 font-medium">
                                     Cancel
                                 </button>
@@ -158,25 +158,25 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Patient Name</label>
                                     <input type="text" name="new_patient_name" x-model="newPatient.name"
-                                           value="{{ old('new_patient_name') }}" 
+                                           value="{{ old('new_patient_name') }}"
                                            placeholder="Enter full name"
-                                           class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all">
+                                           class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
                                 </div>
 
                                 {{-- Phone --}}
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
                                     <div class="flex gap-2">
-                                        <select name="new_patient_country_code" 
-                                                class="w-24 sm:w-28 px-3 py-3 border border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 bg-gray-50 text-sm">
+                                        <select name="new_patient_country_code"
+                                                class="w-24 sm:w-28 px-3 py-3 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 bg-gray-50 text-sm">
                                             @foreach($countryCodes as $code)
                                                 <option value="{{ $code['code'] }}" {{ $selectedCountryCode == $code['code'] ? 'selected' : '' }}>{{ $code['label'] }}</option>
                                             @endforeach
                                         </select>
                                         <input type="tel" name="new_patient_phone" x-model="newPatient.phone"
-                                               value="{{ old('new_patient_phone') }}" 
+                                               value="{{ old('new_patient_phone') }}"
                                                placeholder="Mobile number"
-                                               class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all">
+                                               class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
                                     </div>
                                 </div>
 
@@ -191,16 +191,16 @@
                                     <div class="mt-4 space-y-4 pl-5">
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
-                                            <input type="email" name="new_patient_email" 
-                                                   value="{{ old('new_patient_email') }}" 
+                                            <input type="email" name="new_patient_email"
+                                                   value="{{ old('new_patient_email') }}"
                                                    placeholder="email@example.com"
-                                                   class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all">
+                                                   class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700 mb-1.5">Country</label>
-                                            <input type="text" name="new_patient_country" 
-                                                   value="{{ old('new_patient_country', $representative->country ?? 'India') }}" 
-                                                   class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all">
+                                            <input type="text" name="new_patient_country"
+                                                   value="{{ old('new_patient_country', $representative->country ?? 'India') }}"
+                                                   class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all">
                                         </div>
                                     </div>
                                 </details>
@@ -212,15 +212,15 @@
                 {{-- ═══════════════════════════════════════════════════════════════
                      SECTION 2: ORDER DETAILS
                 ═══════════════════════════════════════════════════════════════ --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-100 bg-gray-50/50">
+                <div class="bg-white rounded-2xl shadow-sm border border-corp-100 overflow-hidden">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-corp-100 bg-corp-50/50">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
-                                <span class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold">2</span>
-                                <h2 class="font-semibold text-gray-800">Order Details</h2>
+                                <span class="w-7 h-7 rounded-full bg-corp-100 text-corp-600 flex items-center justify-center text-sm font-bold">2</span>
+                                <h2 class="font-semibold text-corp-900">Order Details</h2>
                             </div>
                             <template x-if="medicine && packs > 0">
-                                <span class="text-emerald-600">
+                                <span class="text-orange-600">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                     </svg>
@@ -228,7 +228,7 @@
                             </template>
                         </div>
                     </div>
-                    
+
                     <div class="p-4 sm:p-6 space-y-5">
                         {{-- Medicine Selection --}}
                         <div>
@@ -236,7 +236,7 @@
                             <div class="grid gap-2">
                                 @foreach($medicines as $medicine)
                                     <label class="relative cursor-pointer">
-                                        <input type="radio" name="medicine_id" value="{{ $medicine->id }}" 
+                                        <input type="radio" name="medicine_id" value="{{ $medicine->id }}"
                                                x-model="medicine"
                                                @change="medicineDays = {{ $medicine->pack_duration_days }}; calculateRenewal()"
                                                {{ old('medicine_id') == $medicine->id ? 'checked' : '' }}
@@ -267,9 +267,9 @@
                                         class="w-14 h-14 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-2xl font-medium text-gray-600 transition-colors active:scale-95">
                                     −
                                 </button>
-                                <input type="number" name="packs_ordered" x-model="packs" 
+                                <input type="number" name="packs_ordered" x-model="packs"
                                        @change="calculateRenewal()"
-                                       min="1" required 
+                                       min="1" required
                                        class="flex-1 text-center py-3 text-2xl font-semibold border-0 bg-transparent focus:ring-0"
                                        readonly>
                                 <button type="button" @click="packs++; calculateRenewal()"
@@ -287,8 +287,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Treatment Start Date</label>
                             <input type="date" name="treatment_start_date" x-model="startDate"
                                    @change="calculateRenewal()"
-                                   value="{{ old('treatment_start_date', date('Y-m-d')) }}" 
-                                   required 
+                                   value="{{ old('treatment_start_date', date('Y-m-d')) }}"
+                                   required
                                    class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
                         </div>
 
@@ -301,7 +301,7 @@
                                 Add note (optional)
                             </summary>
                             <div class="mt-3 pl-5">
-                                <textarea name="notes" rows="2" 
+                                <textarea name="notes" rows="2"
                                           placeholder="Any special instructions..."
                                           class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none">{{ old('notes') }}</textarea>
                             </div>
@@ -312,14 +312,14 @@
                 {{-- ═══════════════════════════════════════════════════════════════
                      SECTION 3: ORDER SUMMARY (Shows when ready)
                 ═══════════════════════════════════════════════════════════════ --}}
-                <div x-show="isReady" x-transition class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border border-gray-200 overflow-hidden">
-                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 bg-white/50">
+                <div x-show="isReady" x-transition class="bg-gradient-to-br from-corp-50 to-corp-100 rounded-2xl border border-corp-200 overflow-hidden">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-corp-200 bg-white/50">
                         <div class="flex items-center gap-3">
                             <span class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold">3</span>
-                            <h2 class="font-semibold text-gray-800">Order Summary</h2>
+                            <h2 class="font-semibold text-corp-900">Order Summary</h2>
                         </div>
                     </div>
-                    
+
                     <div class="p-4 sm:p-6">
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between py-2 border-b border-gray-200">
@@ -340,7 +340,7 @@
                             </div>
                             <div class="flex justify-between py-2">
                                 <span class="text-gray-600">Expected Renewal</span>
-                                <span class="font-semibold text-emerald-600" x-text="renewalDate"></span>
+                                <span class="font-semibold text-orange-600" x-text="renewalDate"></span>
                             </div>
                         </div>
                     </div>
@@ -351,15 +351,15 @@
             {{-- ═══════════════════════════════════════════════════════════════
                  STICKY BOTTOM BAR (Mobile)
             ═══════════════════════════════════════════════════════════════ --}}
-            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 lg:hidden shadow-lg z-30">
+            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-corp-100 p-4 lg:hidden shadow-lg z-30">
                 <div class="flex items-center gap-3 max-w-lg mx-auto">
-                    <a href="{{ route('representative.orders.index') }}" 
-                       class="px-4 py-3 text-gray-600 font-medium">
+                    <a href="{{ route('representative.orders.index') }}"
+                       class="px-4 py-3 text-corp-600 font-medium">
                         Cancel
                     </a>
-                    <button type="submit" 
+                    <button type="submit"
                             :disabled="!isReady || isSubmitting"
-                            :class="isReady ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'"
+                            :class="isReady ? 'bg-corp-900 hover:bg-corp-800 text-white shadow-sm' : 'bg-corp-100 text-corp-400 cursor-not-allowed'"
                             class="flex-1 py-3.5 font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
                         <span x-show="!isSubmitting">Create Order</span>
                         <span x-show="isSubmitting" class="flex items-center gap-2">
@@ -375,13 +375,13 @@
 
             {{-- Desktop Submit --}}
             <div class="hidden lg:flex items-center justify-end gap-4 mt-6">
-                <a href="{{ route('representative.orders.index') }}" 
-                   class="px-6 py-3 text-gray-600 hover:text-gray-800 font-medium rounded-xl hover:bg-gray-100 transition-colors">
+                <a href="{{ route('representative.orders.index') }}"
+                   class="px-6 py-3 text-corp-600 hover:text-corp-800 font-medium rounded-xl hover:bg-corp-50 transition-colors">
                     Cancel
                 </a>
-                <button type="submit" 
+                <button type="submit"
                         :disabled="!isReady || isSubmitting"
-                        :class="isReady ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-200' : 'bg-gray-200 text-gray-400 cursor-not-allowed'"
+                        :class="isReady ? 'bg-corp-900 hover:bg-corp-800 text-white shadow-sm' : 'bg-corp-100 text-corp-400 cursor-not-allowed'"
                         class="px-8 py-3.5 font-semibold rounded-xl transition-all flex items-center gap-2">
                     <span x-show="!isSubmitting">Create Order</span>
                     <span x-show="isSubmitting" class="flex items-center gap-2">
@@ -412,7 +412,7 @@
                     name: @json(old('new_patient_name') ?? ''),
                     phone: @json(old('new_patient_phone') ?? '')
                 },
-                
+
                 // Order Details
                 medicine: @json(old('medicine_id') ?? ''),
                 medicineName: '',
@@ -420,14 +420,14 @@
                 packs: @json(old('packs_ordered', 1)),
                 startDate: @json(old('treatment_start_date', date('Y-m-d'))),
                 renewalDate: '',
-                
+
                 // UI State
                 isSubmitting: false,
-                
+
                 // Medicine lookup data
                 medicineData: @json($medicines->pluck('pack_duration_days', 'id')),
                 medicineNames: @json($medicines->pluck('name', 'id')),
-                
+
                 init() {
                     // Restore selected patient on page reload (validation error)
                     if (this.selectedId) {
@@ -437,7 +437,7 @@
                             this.selectedPhone = patient.phone;
                         }
                     }
-                    
+
                     // Set medicine info if already selected
                     if (this.medicine) {
                         this.medicineDays = this.medicineData[this.medicine] || 0;
@@ -445,18 +445,18 @@
                         this.calculateRenewal();
                     }
                 },
-                
+
                 get filteredPatients() {
                     if (this.search === '') {
                         return this.patients.slice(0, 10);
                     }
                     const q = this.search.toLowerCase();
-                    return this.patients.filter(p => 
-                        p.name.toLowerCase().includes(q) || 
+                    return this.patients.filter(p =>
+                        p.name.toLowerCase().includes(q) ||
                         p.phone.includes(q)
                     ).slice(0, 10);
                 },
-                
+
                 selectPatient(patient) {
                     this.selectedId = patient.id;
                     this.selectedName = patient.name;
@@ -464,47 +464,47 @@
                     this.search = '';
                     this.showDropdown = false;
                 },
-                
+
                 clearPatient() {
                     this.selectedId = '';
                     this.selectedName = '';
                     this.selectedPhone = '';
                     this.search = '';
                 },
-                
+
                 startNewPatient() {
                     this.createNew = true;
                     this.clearPatient();
                     this.showDropdown = false;
                 },
-                
+
                 cancelNewPatient() {
                     this.createNew = false;
                     this.newPatient = { name: '', phone: '' };
                 },
-                
+
                 calculateRenewal() {
                     if (!this.startDate || !this.medicineDays || !this.packs) return;
-                    
+
                     this.medicineName = this.medicineNames[this.medicine] || '';
-                    
+
                     const start = new Date(this.startDate);
                     const days = this.packs * this.medicineDays;
                     const renewal = new Date(start.getTime() + days * 24 * 60 * 60 * 1000);
-                    
+
                     this.renewalDate = renewal.toLocaleDateString('en-IN', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric'
                     });
                 },
-                
+
                 get isReady() {
                     const hasPatient = this.selectedId || (this.createNew && this.newPatient.name && this.newPatient.phone);
                     const hasOrder = this.medicine && this.packs > 0 && this.startDate;
                     return hasPatient && hasOrder;
                 },
-                
+
                 handleSubmit(e) {
                     if (!this.isReady) {
                         e.preventDefault();

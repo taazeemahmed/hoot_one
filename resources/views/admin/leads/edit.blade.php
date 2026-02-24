@@ -17,18 +17,18 @@
             <form method="POST" action="{{ route('admin.leads.update', $lead) }}" class="space-y-6">
                 @csrf
                 @method('PUT')
-                
+
                 <!-- Basic Info -->
                 <div class="space-y-4">
                     <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Contact Information</h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                             <input type="text" name="name" id="name" required value="{{ old('name', $lead->name) }}"
                                    class="w-full rounded-lg border-gray-200 focus:border-slate-500 focus:ring-slate-500">
                         </div>
-                        
+
                         <div>
                             <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
                             <input type="text" name="phone" id="phone" required value="{{ old('phone', $lead->phone) }}"
@@ -42,7 +42,7 @@
                             <input type="email" name="email" id="email" value="{{ old('email', $lead->email) }}"
                                    class="w-full rounded-lg border-gray-200 focus:border-slate-500 focus:ring-slate-500">
                         </div>
-                        
+
                         <div>
                             <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country *</label>
                             <input type="text" name="country" id="country" required value="{{ old('country', $lead->country) }}"
@@ -54,7 +54,7 @@
                 <!-- Lead Status -->
                 <div class="space-y-4 pt-4 border-t border-gray-100">
                     <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Lead Status</h3>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label for="lead_status" class="block text-sm font-medium text-gray-700 mb-1">Status *</label>
@@ -68,7 +68,7 @@
                                 <option value="not_interested" {{ old('lead_status', $lead->lead_status) == 'not_interested' ? 'selected' : '' }}>Not Interested</option>
                             </select>
                         </div>
-                        
+
                         <div>
                             <label for="lead_quality" class="block text-sm font-medium text-gray-700 mb-1">Quality *</label>
                             <select name="lead_quality" id="lead_quality" required class="w-full rounded-lg border-gray-200 focus:border-slate-500 focus:ring-slate-500">
@@ -78,7 +78,7 @@
                                 <option value="invalid" {{ old('lead_quality', $lead->lead_quality) == 'invalid' ? 'selected' : '' }}>⚠️ Invalid</option>
                             </select>
                         </div>
-                        
+
                         <div>
                             <label for="source" class="block text-sm font-medium text-gray-700 mb-1">Source *</label>
                             <select name="source" id="source" required class="w-full rounded-lg border-gray-200 focus:border-slate-500 focus:ring-slate-500">
@@ -93,8 +93,8 @@
 
                 <!-- Conversion Section (shown when status is converted) -->
                 <div id="conversionSection" class="space-y-4 pt-4 border-t border-gray-100 {{ old('lead_status', $lead->lead_status) == 'converted' ? '' : 'hidden' }}">
-                    <h3 class="text-sm font-semibold text-emerald-700 uppercase tracking-wider">Conversion Details</h3>
-                    
+                    <h3 class="text-sm font-semibold text-orange-700 uppercase tracking-wider">Conversion Details</h3>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="medicine_id" class="block text-sm font-medium text-gray-700 mb-1">Medicine</label>
@@ -105,7 +105,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        
+
                         <div>
                             <label for="packs_ordered" class="block text-sm font-medium text-gray-700 mb-1">Packs Ordered</label>
                             <input type="number" name="packs_ordered" id="packs_ordered" min="1" value="{{ old('packs_ordered', 1) }}"
@@ -117,7 +117,7 @@
                 <!-- Assignment -->
                 <div class="space-y-4 pt-4 border-t border-gray-100">
                     <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Assignment</h3>
-                    
+
                     <div>
                         <label for="representative_id" class="block text-sm font-medium text-gray-700 mb-1">Assigned Representative</label>
                         <select name="representative_id" id="representative_id" class="w-full rounded-lg border-gray-200 focus:border-slate-500 focus:ring-slate-500">
@@ -134,7 +134,7 @@
                 <!-- Notes -->
                 <div class="space-y-4 pt-4 border-t border-gray-100">
                     <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Notes</h3>
-                    
+
                     <div>
                         <textarea name="notes" id="notes" rows="4"
                                   class="w-full rounded-lg border-gray-200 focus:border-slate-500 focus:ring-slate-500"
@@ -144,11 +144,11 @@
 
                 <!-- Actions -->
                 <div class="flex gap-3 pt-4 border-t border-gray-100">
-                    <a href="{{ route('admin.leads.index') }}" 
+                    <a href="{{ route('admin.leads.index') }}"
                        class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 text-center font-medium rounded-lg hover:bg-gray-200 transition-colors">
                         Cancel
                     </a>
-                    <button type="submit" 
+                    <button type="submit"
                             class="flex-1 px-4 py-2.5 bg-slate-900 text-white text-center font-medium rounded-lg hover:bg-slate-800 transition-colors">
                         Update Lead
                     </button>

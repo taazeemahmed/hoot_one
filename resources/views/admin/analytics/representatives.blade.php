@@ -61,8 +61,8 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <img class="h-10 w-10 rounded-full" 
-                                             src="https://ui-avatars.com/api/?name={{ urlencode($rep->name) }}&color=1e293b&background=f1f5f9" 
+                                        <img class="h-10 w-10 rounded-full"
+                                             src="https://ui-avatars.com/api/?name={{ urlencode($rep->name) }}&color=1e293b&background=f1f5f9"
                                              alt="">
                                     </div>
                                     <div class="ml-4">
@@ -80,7 +80,7 @@
                                 {{ number_format($rep->total_leads) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                                     {{ number_format($rep->converted) }}
                                 </span>
                             </td>
@@ -96,11 +96,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <span class="text-sm font-bold {{ $rate >= 25 ? 'text-green-600' : ($rate >= 15 ? 'text-amber-600' : 'text-red-600') }}">
+                                    <span class="text-sm font-bold {{ $rate >= 25 ? 'text-orange-600' : ($rate >= 15 ? 'text-amber-600' : 'text-red-600') }}">
                                         {{ number_format($rate, 1) }}%
                                     </span>
                                     <div class="ml-2 w-16 bg-gray-200 rounded-full h-2">
-                                        <div class="h-2 rounded-full {{ $rate >= 25 ? 'bg-green-500' : ($rate >= 15 ? 'bg-amber-500' : 'bg-red-500') }}" 
+                                        <div class="h-2 rounded-full {{ $rate >= 25 ? 'bg-orange-500' : ($rate >= 15 ? 'bg-amber-500' : 'bg-red-500') }}"
                                              style="width: {{ min($rate, 100) }}%"></div>
                                     </div>
                                 </div>
@@ -151,8 +151,8 @@
                     @foreach($representatives->take(6) as $rep)
                     <div class="border rounded-xl p-4 hover:shadow-md transition-shadow">
                         <div class="flex items-center mb-3">
-                            <img class="h-10 w-10 rounded-full" 
-                                 src="https://ui-avatars.com/api/?name={{ urlencode($rep->name) }}&color=1e293b&background=f1f5f9" 
+                            <img class="h-10 w-10 rounded-full"
+                                 src="https://ui-avatars.com/api/?name={{ urlencode($rep->name) }}&color=1e293b&background=f1f5f9"
                                  alt="">
                             <div class="ml-3">
                                 <h4 class="font-medium text-gray-900">{{ $rep->name }}</h4>
@@ -185,7 +185,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const reps = @json($representatives);
-    
+
     // Comparison Chart
     const compCtx = document.getElementById('repComparisonChart').getContext('2d');
     new Chart(compCtx, {

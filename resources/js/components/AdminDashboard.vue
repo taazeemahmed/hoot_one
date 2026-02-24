@@ -9,7 +9,7 @@
                 <div class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-2 -translate-y-2">
                     <svg class="w-32 h-32 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
                 </div>
-                
+
                 <div class="relative z-10">
                     <div class="flex items-center text-teal-100 mb-2">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -31,7 +31,7 @@
             <div class="flex flex-col justify-between p-6 bg-white shadow-sm hover:shadow-md transition-all duration-200 rounded-2xl border border-gray-100 hover:-translate-y-1">
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex items-center">
-                         <div class="p-3 bg-emerald-50 rounded-xl text-emerald-600 mr-4">
+                         <div class="p-3 bg-orange-50 rounded-xl text-hoot-maroon mr-4">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                         </div>
                         <div>
@@ -39,12 +39,12 @@
                             <h3 class="text-3xl font-bold text-gray-800 tracking-tight">{{ stats.active_orders }}</h3>
                         </div>
                     </div>
-                    <span class="text-emerald-500 bg-emerald-50 p-2 rounded-full">
+                    <span class="text-orange-500 bg-orange-50 p-2 rounded-full">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                     </span>
                 </div>
                 <div class="flex items-center text-sm text-gray-500 pl-1">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2"></span>
+                    <span class="w-2 h-2 rounded-full bg-orange-400 mr-2"></span>
                     <span>+{{ stats.pending_orders || 0 }} pending approval</span>
                 </div>
             </div>
@@ -74,7 +74,7 @@
             <div class="flex flex-col justify-between p-6 bg-white shadow-sm hover:shadow-md transition-all duration-200 rounded-2xl border border-gray-100 relative overflow-hidden hover:-translate-y-1">
                 <!-- Subtle background blur decoration -->
                 <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-60"></div>
-                
+
                 <div class="flex items-start justify-between mb-4 relative z-10">
                      <div class="flex items-center">
                          <div class="p-3 bg-blue-50 rounded-xl text-blue-600 mr-4">
@@ -94,7 +94,7 @@
 
         <!-- Main Content Area: Urgent List + Chart -->
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            
+
             <!-- Needs Attention Today - Clean List -->
             <div class="xl:col-span-2 space-y-4">
                 <div class="flex items-center space-x-2 pl-1">
@@ -112,7 +112,7 @@
 
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-100">
                      <div v-if="urgentItems.length === 0" class="p-12 text-center text-gray-500">
-                        <div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-50 rounded-full text-green-500">
+                        <div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-orange-50 rounded-full text-hoot-maroon">
                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
                         <p class="text-lg font-medium text-gray-900">All caught up!</p>
@@ -126,13 +126,13 @@
                             <div class="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-bold bg-gray-100 text-gray-500 border-2 border-white shadow-sm ring-1 ring-gray-100">
                                 {{ getInitials(item.patient?.name) }}
                             </div>
-                            
+
                             <div>
                                 <h4 class="text-base font-bold text-gray-900 leading-tight mb-1">
                                     {{ item.patient?.name }}
                                     <span class="ml-2 text-xs font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full inline-block">{{ item.medicine?.name }}</span>
                                 </h4>
-                                
+
                                 <p class="text-sm mt-1.5 flex items-center">
                                     <span v-if="item.isOverdue" class="text-red-500 font-bold flex items-center">
                                         Overdue by {{ Math.abs(item.days_until_renewal) }} days
@@ -149,19 +149,19 @@
                         <!-- Right: Actions -->
                         <div class="flex items-center space-x-3 self-end md:self-center bg-white p-1 rounded-lg">
                             <span class="px-3 py-1 bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-wider rounded-md border border-red-100 mr-2">Urgent</span>
-                            
-                            <a :href="item.patient?.phone ? `tel:${item.patient.phone}` : '#'" class="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-emerald-500 transition-all border border-transparent hover:shadow-md" title="Call">
+
+                            <a :href="item.patient?.phone ? `tel:${item.patient.phone}` : '#'" class="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-orange-500 transition-all border border-transparent hover:shadow-md" title="Call">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                             </a>
-                            
+
                             <a :href="item.patient?.phone ? `https://wa.me/${item.patient.phone}` : '#'" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-emerald-500 transition-all border border-transparent hover:shadow-md" title="WhatsApp">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                             </a>
 
-                             <button @click="markAsDone(item.id)" class="w-9 h-9 flex items-center justify-center rounded-lg text-emerald-600 bg-emerald-50 hover:bg-emerald-600 hover:text-white transition-all shadow-sm hover:shadow-md" title="Mark Done">
+                             <button @click="markAsDone(item.id)" class="w-9 h-9 flex items-center justify-center rounded-lg text-orange-600 bg-orange-50 hover:bg-orange-600 hover:text-white transition-all shadow-sm hover:shadow-md" title="Mark Done">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             </button>
-                            
+
                              <button class="w-9 h-9 flex items-center justify-center rounded-lg text-gray-300 hover:text-gray-600 transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                             </button>
@@ -191,7 +191,7 @@
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Total Orders</span>
                     </div>
                 </div>
-                
+
                 <div class="space-y-3">
                      <div v-for="(item, index) in topCountries" :key="index" class="flex items-center justify-between text-sm group cursor-default">
                         <div class="flex items-center">
@@ -216,7 +216,7 @@
             <div class="px-6 py-5 border-b border-gray-100">
                 <h3 class="text-lg font-bold text-gray-800">Recent & Upcoming Renewals</h3>
             </div>
-            
+
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -243,12 +243,12 @@
                                     </div>
                                 </div>
                             </td>
-                            
+
                             <!-- Medicine -->
                             <td class="px-6 py-4 text-gray-600 font-medium">
                                 {{ order.medicine?.name }}
                             </td>
-                            
+
                             <!-- Start Date -->
                             <td class="px-6 py-4">
                                 <span class="font-bold text-gray-800 block">{{ formatDate(order.expected_renewal_date) }}</span>
@@ -266,7 +266,7 @@
                             <td class="px-6 py-4 text-gray-500">
                                 <div class="flex items-center">
                                     <span>{{ order.representative?.user?.name }}</span>
-                                    <button class="ml-2 text-gray-300 hover:text-emerald-600">
+                                    <button class="ml-2 text-gray-300 hover:text-orange-600">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
                                     </button>
                                 </div>
@@ -275,17 +275,17 @@
                             <!-- Menu Dot -->
                              <td class="px-4 py-4 text-right pr-6 action-menu">
                                 <div class="relative">
-                                    <button @click.stop="toggleMenu(order.id)" class="text-gray-300 hover:text-emerald-600 transition-colors p-1 rounded-md hover:bg-emerald-50">
+                                    <button @click.stop="toggleMenu(order.id)" class="text-gray-300 hover:text-orange-600 transition-colors p-1 rounded-md hover:bg-orange-50">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                                     </button>
-                                    
+
                                     <!-- Dropdown -->
                                     <div v-if="openMenuId === order.id" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 z-50 overflow-hidden transform origin-top-right transition-all">
                                         <div class="py-1">
-                                            <a :href="`/admin/orders/${order.id}`" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700">
+                                            <a :href="`/admin/orders/${order.id}`" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">
                                                 View Order Details
                                             </a>
-                                            <a :href="`/admin/patients/${order.patient_id}`" class="block px-4 py-2 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700">
+                                            <a :href="`/admin/patients/${order.patient_id}`" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700">
                                                 Patient Profile
                                             </a>
                                             <div class="border-t border-gray-100 my-1"></div>
@@ -301,7 +301,7 @@
                 </table>
             </div>
              <div class="px-6 py-4 bg-white border-t border-gray-100 text-center">
-                <a href="/admin/orders" class="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center justify-center gap-1 transition-colors">
+                <a href="/admin/orders" class="text-sm font-medium text-orange-600 hover:text-orange-700 flex items-center justify-center gap-1 transition-colors">
                     View all renewals <span class="text-lg">→</span>
                 </a>
             </div>
@@ -357,7 +357,7 @@ const topCountries = computed(() => props.ordersByCountry.slice(0, 4));
 
 const topCode = computed(() => props.ordersByCountry[0]?.country || 'Unknown');
 const topPercent = computed(() => {
-    const total = props.stats.total_orders || 1; 
+    const total = props.stats.total_orders || 1;
     const countryTotal = props.ordersByCountry[0]?.total || 0;
     return Math.round((countryTotal / total) * 100);
 });
@@ -369,7 +369,7 @@ const markAsDone = async (id) => {
     // Optimistic remove
     const overdueIndex = localOverdue.value.findIndex(o => o.id === id);
     if (overdueIndex > -1) localOverdue.value.splice(overdueIndex, 1);
-    
+
     const upcomingIndex = localUpcoming.value.findIndex(o => o.id === id);
     if (upcomingIndex > -1) localUpcoming.value.splice(upcomingIndex, 1);
 
@@ -377,7 +377,7 @@ const markAsDone = async (id) => {
         // Assuming typical Laravel Resource route: PUT /admin/orders/{id}
         // You might need to adjust the CSRF token handling if not global
         const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
+
         await fetch(`/admin/orders/${id}`, {
             method: 'PUT',
             headers: {
@@ -460,6 +460,6 @@ const getInitials = (name) => {
 const getStatusPillClass = (order) => {
     if (order.days_until_renewal < 0) return 'bg-orange-100 text-orange-700';
     if (order.days_until_renewal <= 7) return 'bg-orange-100 text-orange-700';
-    return 'bg-emerald-100 text-emerald-700';
+    return 'bg-orange-100 text-orange-700';
 };
 </script>

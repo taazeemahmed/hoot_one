@@ -46,7 +46,7 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-5">
                 <div class="text-sm font-medium text-gray-500">Converted</div>
-                <div class="mt-1 text-2xl font-bold text-green-600">{{ number_format($stats['converted'] ?? 0) }}</div>
+                <div class="mt-1 text-2xl font-bold text-orange-600">{{ number_format($stats['converted'] ?? 0) }}</div>
             </div>
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-5">
                 <div class="text-sm font-medium text-gray-500">Lost</div>
@@ -147,7 +147,7 @@
                                 {{ number_format($source->total) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                                     {{ number_format($source->converted) }}
                                 </span>
                             </td>
@@ -157,13 +157,13 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="text-sm font-bold {{ $rate >= 20 ? 'text-green-600' : ($rate >= 10 ? 'text-amber-600' : 'text-red-600') }}">
+                                <span class="text-sm font-bold {{ $rate >= 20 ? 'text-orange-600' : ($rate >= 10 ? 'text-amber-600' : 'text-red-600') }}">
                                     {{ number_format($rate, 1) }}%
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="w-24 bg-gray-200 rounded-full h-2">
-                                    <div class="h-2 rounded-full {{ $rate >= 20 ? 'bg-green-500' : ($rate >= 10 ? 'bg-amber-500' : 'bg-red-500') }}" 
+                                    <div class="h-2 rounded-full {{ $rate >= 20 ? 'bg-orange-500' : ($rate >= 10 ? 'bg-amber-500' : 'bg-red-500') }}"
                                          style="width: {{ min($rate, 100) }}%"></div>
                                 </div>
                             </td>
@@ -197,7 +197,7 @@
     // Source Performance Chart
     const sourceCtx = document.getElementById('sourcePerformanceChart').getContext('2d');
     const sourceData = @json($conversionBySource);
-    
+
     new Chart(sourceCtx, {
         type: 'bar',
         data: {
@@ -238,7 +238,7 @@
     // Daily Trends Chart
     const dailyCtx = document.getElementById('dailyTrendsChart').getContext('2d');
     const dailyData = @json($dailyTrends ?? []);
-    
+
     new Chart(dailyCtx, {
         type: 'line',
         data: {

@@ -56,7 +56,7 @@
                             </div>
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            <span class="px-2 py-1 text-xs text-gray-700 bg-green-50 rounded-full border border-green-100">
+                            <span class="px-2 py-1 text-xs text-gray-700 bg-orange-50 rounded-full border border-orange-100">
                                 {{ $patient->representative->user->name }}
                             </span>
                         </td>

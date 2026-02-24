@@ -22,7 +22,7 @@
                         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500"></div>
 
                         <form @submit.prevent="submitForm" class="space-y-6">
-                            
+
                             <!-- Basic Info Section -->
                             <div>
                                 <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -106,7 +106,7 @@
                                     <div class="space-y-2">
                                         <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Medical Concern</label>
                                         <div class="relative">
-                                            <select v-model="form.medical_concern" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all outline-none font-medium appearance-none cursor-pointer">
+                                            <select v-model="form.medical_concern" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all outline-none font-medium appearance-none cursor-pointer">
                                                 <option value="HIV">HIV</option>
                                                 <option value="HBV">HBV</option>
                                                 <option value="HSV">HSV</option>
@@ -123,7 +123,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Action Bar -->
                             <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-4">
                                 <button type="submit" :disabled="loading" class="px-8 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-violet-500/25 transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2">
@@ -241,7 +241,7 @@ const submitForm = async () => {
         // We use standard form submission via XHR or just post to the endpoint since we are in a hybrid app?
         // Actually, for better UX let's use Axios if available, or just standard form POST to utilize the existing controller redirect.
         // But to make it really "Vue-like", let's use Axios and redirect manually.
-        
+
         await axios.post('/marketing/leads', form);
         window.location.href = '/marketing/leads'; // Redirect on success
     } catch (error) {

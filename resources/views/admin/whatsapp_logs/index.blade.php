@@ -37,7 +37,7 @@
                              @endif
                         </td>
                         <td class="px-4 py-3 text-xs">
-                            <span class="px-2 py-1 font-semibold leading-tight rounded-full {{ $log->status == 'sent' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                            <span class="px-2 py-1 font-semibold leading-tight rounded-full {{ $log->status == 'sent' ? 'bg-orange-100 text-orange-700' : 'bg-red-100 text-red-700' }}">
                                 {{ ucfirst($log->status) }}
                             </span>
                         </td>

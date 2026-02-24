@@ -17,10 +17,23 @@ export default {
             },
             colors: {
                 hoot: {
-                    dark: '#1B4332',
-                    green: '#2D6A4F',
-                    light: '#F0FDF4',
+                    dark: '#C46E0A',
+                    green: '#FF860D',
+                    light: '#FFF7ED',
                     gray: '#F3F4F6',
+                    maroon: '#730D15',
+                },
+                corp: {
+                    50: '#f0f4f8',
+                    100: '#d9e2ec',
+                    200: '#bcccdc',
+                    300: '#9fb3c8',
+                    400: '#829ab1',
+                    500: '#627d98',
+                    600: '#486581',
+                    700: '#334e68',
+                    800: '#243b53',
+                    900: '#102a43',
                 }
             }
         },

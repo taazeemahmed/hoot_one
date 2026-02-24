@@ -33,7 +33,7 @@
             </div>
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-5">
                 <div class="text-sm font-medium text-gray-500">Successfully Converted</div>
-                <div class="mt-1 text-2xl font-bold text-green-600">{{ number_format($totalConverted) }}</div>
+                <div class="mt-1 text-2xl font-bold text-orange-600">{{ number_format($totalConverted) }}</div>
                 <div class="mt-1 text-xs text-gray-400">{{ number_format($overallRate, 1) }}% conversion rate</div>
             </div>
             <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-5">
@@ -92,8 +92,8 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <img class="h-10 w-10 rounded-full" 
-                                             src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&color=1e293b&background=f1f5f9" 
+                                        <img class="h-10 w-10 rounded-full"
+                                             src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&color=1e293b&background=f1f5f9"
                                              alt="">
                                     </div>
                                     <div class="ml-4">
@@ -111,7 +111,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
                                     {{ number_format($member->converted) }}
                                 </span>
                             </td>
@@ -122,11 +122,11 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <span class="text-sm font-bold {{ $rate >= 20 ? 'text-green-600' : ($rate >= 10 ? 'text-amber-600' : 'text-red-600') }}">
+                                    <span class="text-sm font-bold {{ $rate >= 20 ? 'text-orange-600' : ($rate >= 10 ? 'text-amber-600' : 'text-red-600') }}">
                                         {{ number_format($rate, 1) }}%
                                     </span>
                                     <div class="ml-2 w-16 bg-gray-200 rounded-full h-2">
-                                        <div class="h-2 rounded-full {{ $rate >= 20 ? 'bg-green-500' : ($rate >= 10 ? 'bg-amber-500' : 'bg-red-500') }}" 
+                                        <div class="h-2 rounded-full {{ $rate >= 20 ? 'bg-orange-500' : ($rate >= 10 ? 'bg-amber-500' : 'bg-red-500') }}"
                                              style="width: {{ min($rate, 100) }}%"></div>
                                     </div>
                                 </div>
@@ -185,22 +185,22 @@
                 @endphp
                 <div class="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow">
                     <div class="flex items-center mb-4">
-                        <img class="h-12 w-12 rounded-full" 
-                             src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&color=1e293b&background=f1f5f9" 
+                        <img class="h-12 w-12 rounded-full"
+                             src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&color=1e293b&background=f1f5f9"
                              alt="">
                         <div class="ml-4">
                             <h4 class="font-semibold text-gray-900">{{ $member->name }}</h4>
                             <p class="text-sm text-gray-500">Marketing Team</p>
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-3 gap-4 mb-4">
                         <div class="text-center">
                             <div class="text-xl font-bold text-gray-900">{{ $member->total_leads }}</div>
                             <div class="text-xs text-gray-500">Total</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-xl font-bold text-green-600">{{ $member->converted }}</div>
+                            <div class="text-xl font-bold text-orange-600">{{ $member->converted }}</div>
                             <div class="text-xs text-gray-500">Converted</div>
                         </div>
                         <div class="text-center">
@@ -208,16 +208,16 @@
                             <div class="text-xs text-gray-500">Pending</div>
                         </div>
                     </div>
-                    
+
                     <div class="border-t pt-4">
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-gray-500">Conversion Rate</span>
-                            <span class="text-sm font-bold {{ $rate >= 20 ? 'text-green-600' : ($rate >= 10 ? 'text-amber-600' : 'text-red-600') }}">
+                            <span class="text-sm font-bold {{ $rate >= 20 ? 'text-orange-600' : ($rate >= 10 ? 'text-amber-600' : 'text-red-600') }}">
                                 {{ number_format($rate, 1) }}%
                             </span>
                         </div>
                         <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
-                            <div class="h-2 rounded-full {{ $rate >= 20 ? 'bg-green-500' : ($rate >= 10 ? 'bg-amber-500' : 'bg-red-500') }}" 
+                            <div class="h-2 rounded-full {{ $rate >= 20 ? 'bg-orange-500' : ($rate >= 10 ? 'bg-amber-500' : 'bg-red-500') }}"
                                  style="width: {{ min($rate * 2, 100) }}%"></div>
                         </div>
                     </div>
@@ -232,7 +232,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const members = @json($marketingMembers);
-    
+
     // Lead Generation Chart
     const leadGenCtx = document.getElementById('leadGenChart').getContext('2d');
     new Chart(leadGenCtx, {

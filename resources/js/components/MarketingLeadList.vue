@@ -49,7 +49,7 @@
                 </div>
             </div>
              <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100/60 flex items-center gap-4 group hover:shadow-md transition-all">
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-bold">
+                <div class="w-12 h-12 rounded-xl bg-orange-50 text-hoot-maroon flex items-center justify-center text-lg font-bold">
                     ✅
                 </div>
                 <div>
@@ -107,7 +107,7 @@
                                 <span v-if="lead.lead_quality === 'hot'" class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-100 text-orange-700">🔥 Hot</span>
                                 <span v-else-if="lead.lead_quality === 'warm'" class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-700">☀️ Warm</span>
                                 <span v-else-if="lead.lead_quality === 'cold'" class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600">❄️ Cold</span>
-                                <span v-else class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-700">👤 Patient</span>
+                                <span v-else class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-100 text-orange-700">👤 Patient</span>
                                 <div class="mt-2 text-xs font-medium text-slate-400">via <span class="capitalize text-slate-600">{{ lead.source }}</span></div>
                             </td>
                             <td class="px-6 py-5 align-top">
@@ -123,12 +123,12 @@
                             </td>
                             <td class="px-6 py-5 align-top">
                                 <div v-if="lead.representative" class="flex gap-3">
-                                    <div class="w-10 h-10 min-w-[2.5rem] rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs">
+                                    <div class="w-10 h-10 min-w-[2.5rem] rounded-full bg-orange-100 flex items-center justify-center text-orange-700 font-bold text-xs">
                                         {{ getInitials(lead.representative.user.name) }}
                                     </div>
                                     <div>
                                         <div class="text-sm font-bold text-slate-900 leading-tight">{{ lead.representative.user.name }}</div>
-                                        <div class="text-xs font-medium text-emerald-600 mt-0.5">{{ lead.representative.country }}</div>
+                                        <div class="text-xs font-medium text-orange-600 mt-0.5">{{ lead.representative.country }}</div>
                                     </div>
                                 </div>
                                 <div v-else class="flex items-center gap-2 text-slate-400 text-sm font-medium italic">
@@ -193,7 +193,7 @@
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
-                        
+
                         <form @submit.prevent="submitLog">
                             <div class="space-y-4">
                                 <div>
@@ -206,7 +206,7 @@
                                         <option value="converted">✅ Converted (Ready)</option>
                                     </select>
                                 </div>
-                                
+
                                 <div v-if="logForm.result === 'follow_up'">
                                      <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Follow Up Date</label>
                                      <input type="date" v-model="logForm.follow_up_at" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:ring-2 focus:ring-sky-200 focus:border-sky-500 outline-none transition-all">
@@ -243,7 +243,7 @@
                         </div>
                         <h3 class="text-lg font-bold text-slate-800 mb-2">Delete Lead</h3>
                         <p class="text-slate-500 text-sm mb-6">Are you sure you want to delete <span class="font-semibold text-slate-700">{{ leadToDelete?.name }}</span>? This action cannot be undone.</p>
-                        
+
                         <div class="flex gap-3">
                             <button @click="showDeleteModal = false" class="flex-1 px-4 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all">Cancel</button>
                             <button @click="deleteLead" :disabled="deleteLoading" class="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl font-bold shadow-lg shadow-red-500/25 hover:bg-red-600 transition-all flex justify-center items-center gap-2">
@@ -313,12 +313,12 @@ const submitLog = async () => {
             notes: logForm.notes,
             follow_up_at: logForm.follow_up_at
         });
-        
+
         // Success feedback? Close modal and maybe show toast
         closeLogModal();
         alert('Activity logged successfully');
         // Ideally reload or update local state?
-        // window.location.reload(); 
+        // window.location.reload();
     } catch (error) {
         console.error(error);
         alert('Failed to log activity');
@@ -334,28 +334,28 @@ const confirmDelete = (lead) => {
 
 const deleteLead = async () => {
     if (!leadToDelete.value) return;
-    
+
     deleteLoading.value = true;
     try {
         // Create a form and submit it for proper Laravel DELETE handling
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = `/marketing/leads/${leadToDelete.value.id}`;
-        
+
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        
+
         const csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = '_token';
         csrfInput.value = csrfToken;
         form.appendChild(csrfInput);
-        
+
         const methodInput = document.createElement('input');
         methodInput.type = 'hidden';
         methodInput.name = '_method';
         methodInput.value = 'DELETE';
         form.appendChild(methodInput);
-        
+
         document.body.appendChild(form);
         form.submit();
     } catch (error) {

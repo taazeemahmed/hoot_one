@@ -41,7 +41,7 @@
                             <p class="text-sm font-medium text-gray-800 whitespace-pre-line">{{ $patient->notes ?? 'N/A' }}</p>
                         </div>
                     </div>
-                    
+
                     <div class="mt-6 pt-6 border-t">
                         <a href="{{ route('admin.patients.edit', $patient) }}" class="block w-full py-2 px-4 text-center bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors">
                             Edit Profile
@@ -91,7 +91,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
-                                    <span class="px-2 py-1 font-semibold leading-tight {{ $order->status == 'active' ? 'text-green-700 bg-green-100' : 'text-gray-700 bg-gray-100' }} rounded-full text-xs">
+                                    <span class="px-2 py-1 font-semibold leading-tight {{ $order->status == 'active' ? 'text-orange-700 bg-orange-100' : 'text-gray-700 bg-gray-100' }} rounded-full text-xs">
                                         {{ ucfirst($order->status) }}
                                     </span>
                                 </td>

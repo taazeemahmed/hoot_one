@@ -6,7 +6,7 @@
                 <h1 class="text-2xl font-bold text-gray-900">Lead Management</h1>
                 <p class="text-sm text-gray-500 mt-1">Manage all leads including Company Direct</p>
             </div>
-            <a href="{{ route('admin.leads.create') }}" 
+            <a href="{{ route('admin.leads.create') }}"
                class="inline-flex items-center px-4 py-2 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors shadow-sm">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -34,7 +34,7 @@
                 <div class="text-xs text-gray-500 font-medium mt-1">Negotiating</div>
             </div>
             <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-                <div class="text-2xl font-bold text-emerald-600">{{ $metrics['converted'] }}</div>
+                <div class="text-2xl font-bold text-orange-600">{{ $metrics['converted'] }}</div>
                 <div class="text-xs text-gray-500 font-medium mt-1">Converted</div>
             </div>
             <div class="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
@@ -138,7 +138,7 @@
                                         'assigned' => 'bg-amber-100 text-amber-700',
                                         'contacted' => 'bg-cyan-100 text-cyan-700',
                                         'negotiating' => 'bg-purple-100 text-purple-700',
-                                        'converted' => 'bg-emerald-100 text-emerald-700',
+                                        'converted' => 'bg-orange-100 text-orange-700',
                                         'lost' => 'bg-red-100 text-red-700',
                                         'not_interested' => 'bg-gray-100 text-gray-700',
                                     ];
@@ -183,7 +183,7 @@
                             </td>
                             <td class="px-4 py-3 text-right">
                                 <div class="flex items-center justify-end gap-1">
-                                    <a href="{{ route('admin.leads.show', $lead) }}" 
+                                    <a href="{{ route('admin.leads.show', $lead) }}"
                                        class="p-2 text-gray-400 hover:text-slate-600 hover:bg-gray-100 rounded-lg transition-colors"
                                        title="View">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,7 +191,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
                                     </a>
-                                    <a href="{{ route('admin.leads.edit', $lead) }}" 
+                                    <a href="{{ route('admin.leads.edit', $lead) }}"
                                        class="p-2 text-gray-400 hover:text-slate-600 hover:bg-gray-100 rounded-lg transition-colors"
                                        title="Edit">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,8 +199,8 @@
                                         </svg>
                                     </a>
                                     @if(!$lead->representative_id)
-                                    <button onclick="openAssignModal({{ $lead->id }})" 
-                                            class="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                                    <button onclick="openAssignModal({{ $lead->id }})"
+                                            class="p-2 text-gray-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                                             title="Assign">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
@@ -226,7 +226,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             @if($leads->hasPages())
             <div class="px-4 py-3 border-t border-gray-100">
                 {{ $leads->links() }}
@@ -269,7 +269,7 @@
             document.getElementById('assignForm').action = `/admin/leads/${leadId}/assign`;
             document.getElementById('assignModal').classList.remove('hidden');
         }
-        
+
         function closeAssignModal() {
             document.getElementById('assignModal').classList.add('hidden');
         }
