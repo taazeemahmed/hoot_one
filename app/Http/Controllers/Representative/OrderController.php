@@ -8,13 +8,14 @@ use App\Models\Patient;
 use App\Models\Medicine;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
     public function index(Request $request)
     {
         $representative = auth()->user()->representative;
-        
+
         $query = Order::with(['patient', 'medicine'])
             ->where('representative_id', $representative->id);
 
@@ -44,9 +45,58 @@ class OrderController extends Controller
             }
         }
 
+        // CSV Export
+        if ($request->has('export') && $request->export === 'true') {
+            return $this->exportCsv($query->get());
+        }
+
         $orders = $query->latest()->paginate(10);
 
         return view('representative.orders.index', compact('orders'));
+    }
+
+    private function exportCsv($orders)
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="my_orders_export_' . now()->format('Y-m-d_H-i-s') . '.csv"',
+        ];
+
+        $callback = function() use ($orders) {
+            $file = fopen('php://output', 'w');
+
+            fputcsv($file, [
+                'Patient Name',
+                'Phone',
+                'Email',
+                'Country',
+                'Medicine',
+                'Packs',
+                'Start Date',
+                'Renewal Date',
+                'Status',
+                'Days Until Renewal',
+            ]);
+
+            foreach ($orders as $order) {
+                fputcsv($file, [
+                    $order->patient->name ?? '',
+                    $order->patient->phone ?? '',
+                    $order->patient->email ?? '',
+                    $order->patient->country ?? '',
+                    $order->medicine->name ?? '',
+                    $order->packs_ordered ?? '',
+                    $order->treatment_start_date ? $order->treatment_start_date->format('Y-m-d') : '',
+                    $order->expected_renewal_date ? $order->expected_renewal_date->format('Y-m-d') : '',
+                    ucfirst($order->status),
+                    $order->days_until_renewal,
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 
     public function create()
@@ -64,7 +114,7 @@ class OrderController extends Controller
             })
             ->values();
         $medicines = Medicine::active()->get();
-        
+
         // Define standard available codes
         $allCodes = [
             ['code' => '+91', 'label' => '+91 (IN)', 'countries' => ['India', 'IN']],
@@ -79,7 +129,7 @@ class OrderController extends Controller
         // Logic 1: Check if Representative has a specific country_code assigned by Super Admin
         if (!empty($representative->country_code)) {
             $selectedCountryCode = $representative->country_code;
-            
+
             // Check if this code exists in our standard list
             $foundInList = false;
             foreach ($allCodes as $item) {
@@ -90,7 +140,7 @@ class OrderController extends Controller
                 }
             }
 
-            // If the assigned code is NOT in our standard list/array (e.g. +233 for Ghana), 
+            // If the assigned code is NOT in our standard list/array (e.g. +233 for Ghana),
             // we must create a dynamic custom entry so it appears in the dropdown.
             if (!$foundInList) {
                 $countryCodes[] = [
@@ -99,7 +149,7 @@ class OrderController extends Controller
                     'countries' => [$representative->country]
                 ];
             }
-        
+
         } else {
             // Logic 2: Fallback to guessing based on Country Name (Old Logic)
             foreach ($allCodes as $item) {
@@ -107,7 +157,7 @@ class OrderController extends Controller
                     if (strcasecmp($representative->country, $c) === 0) {
                         $countryCodes[] = $item;
                         $selectedCountryCode = $item['code'];
-                        break 2; 
+                        break 2;
                     }
                 }
             }
@@ -116,7 +166,7 @@ class OrderController extends Controller
         // Final Fallback: If nothing matched/set, show all standard codes and default to +91
         if (empty($countryCodes)) {
             $countryCodes = $allCodes;
-            $selectedCountryCode = '+91'; 
+            $selectedCountryCode = '+91';
         }
 
         return view('representative.orders.create', compact('patients', 'patientsForJs', 'medicines', 'representative', 'countryCodes', 'selectedCountryCode'));
@@ -125,7 +175,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $representative = auth()->user()->representative;
-        
+
         $request->validate([
             'medicine_id' => 'required|exists:medicines,id',
             'packs_ordered' => 'required|integer|min:1',
@@ -188,7 +238,7 @@ class OrderController extends Controller
     {
         $this->authorizeOrder($order);
         $order->load(['patient', 'medicine']);
-        
+
         return view('representative.orders.show', compact('order'));
     }
 
@@ -198,7 +248,7 @@ class OrderController extends Controller
         $representative = auth()->user()->representative;
         $patients = Patient::where('representative_id', $representative->id)->get();
         $medicines = Medicine::active()->get();
-        
+
         return view('representative.orders.edit', compact('order', 'patients', 'medicines'));
     }
 
@@ -206,7 +256,7 @@ class OrderController extends Controller
     {
         $this->authorizeOrder($order);
         $representative = auth()->user()->representative;
-        
+
         $validated = $request->validate([
             'patient_id' => 'required|exists:patients,id',
             'medicine_id' => 'required|exists:medicines,id',
@@ -259,7 +309,7 @@ class OrderController extends Controller
     private function authorizeOrder(Order $order)
     {
         $representative = auth()->user()->representative;
-        
+
         if ($order->representative_id !== $representative->id) {
             abort(403, 'Unauthorized access to this order.');
         }

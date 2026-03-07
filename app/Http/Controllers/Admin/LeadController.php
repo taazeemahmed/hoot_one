@@ -12,6 +12,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LeadController extends Controller
 {
@@ -28,12 +29,12 @@ class LeadController extends Controller
         if ($request->has('status') && $request->status) {
             $query->where('lead_status', $request->status);
         }
-        
+
         // Filter by quality
         if ($request->has('quality') && $request->quality) {
             $query->where('lead_quality', $request->quality);
         }
-        
+
         // Filter by source (marketing member)
         if ($request->has('source_user') && $request->source_user) {
             if ($request->source_user === 'company_direct') {
@@ -44,19 +45,24 @@ class LeadController extends Controller
                 $query->where('assigned_by', $request->source_user);
             }
         }
-        
+
         // Filter by representative
         if ($request->has('representative_id') && $request->representative_id) {
             $query->where('representative_id', $request->representative_id);
         }
-        
+
         // Filter by country
         if ($request->has('country') && $request->country) {
             $query->where('country', $request->country);
         }
 
+        // CSV Export
+        if ($request->has('export') && $request->export === 'true') {
+            return $this->exportCsv($query->get());
+        }
+
         $leads = $query->latest()->paginate(20);
-        
+
         // Metrics
         $metrics = [
             'total' => Patient::count(),
@@ -76,6 +82,48 @@ class LeadController extends Controller
         $countries = Patient::distinct()->pluck('country')->filter()->values();
 
         return view('admin.leads.index', compact('leads', 'metrics', 'representatives', 'marketingMembers', 'countries'));
+    }
+
+    private function exportCsv($leads)
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="leads_export_' . now()->format('Y-m-d_H-i-s') . '.csv"',
+        ];
+
+        $callback = function() use ($leads) {
+            $file = fopen('php://output', 'w');
+
+            fputcsv($file, [
+                'Name',
+                'Phone',
+                'Email',
+                'Country',
+                'Status',
+                'Quality',
+                'Source',
+                'Representative',
+                'Created Date',
+            ]);
+
+            foreach ($leads as $lead) {
+                fputcsv($file, [
+                    $lead->name ?? '',
+                    $lead->phone ?? '',
+                    $lead->email ?? '',
+                    $lead->country ?? '',
+                    ucfirst(str_replace('_', ' ', $lead->lead_status ?? '')),
+                    ucfirst($lead->lead_quality ?? ''),
+                    ucfirst($lead->source ?? ''),
+                    $lead->representative->user->name ?? 'Unassigned',
+                    $lead->created_at ? $lead->created_at->format('Y-m-d') : '',
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 
     /**
@@ -112,7 +160,7 @@ class LeadController extends Controller
 
         // Determine status based on whether representative is assigned
         $leadStatus = $validated['representative_id'] ? 'assigned' : 'new';
-        
+
         $patient = Patient::create([
             'name' => $validated['name'],
             'phone' => $validated['phone'],
@@ -156,7 +204,7 @@ class LeadController extends Controller
         $lead->load(['representative.user', 'assignedBy', 'activities.user', 'orders.medicine']);
         $medicines = Medicine::active()->get();
         $representatives = Representative::with('user')->where('status', 'active')->get();
-        
+
         return view('admin.leads.show', compact('lead', 'medicines', 'representatives'));
     }
 
@@ -208,7 +256,7 @@ class LeadController extends Controller
         // Log assignment if representative changed
         if ($validated['representative_id'] && $oldRepId !== $validated['representative_id']) {
             $lead->update(['assigned_at' => now()]);
-            
+
             LeadActivity::create([
                 'patient_id' => $lead->id,
                 'user_id' => Auth::id(),
@@ -311,7 +359,7 @@ class LeadController extends Controller
         // Delete related data
         LeadActivity::where('patient_id', $lead->id)->delete();
         Order::where('patient_id', $lead->id)->delete();
-        
+
         $leadName = $lead->name;
         $lead->delete();
 

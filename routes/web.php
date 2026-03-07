@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
 // Super Admin Routes
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::resource('representatives', RepresentativeController::class);
     Route::resource('medicines', MedicineController::class);
     Route::resource('patients', AdminPatientController::class);
@@ -53,6 +53,24 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('leads', App\Http\Controllers\Admin\LeadController::class);
     Route::post('/leads/{lead}/assign', [App\Http\Controllers\Admin\LeadController::class, 'assign'])->name('leads.assign');
     Route::post('/leads/{lead}/activity', [App\Http\Controllers\Admin\LeadController::class, 'storeActivity'])->name('leads.activity.store');
+
+    // Media Library
+    Route::get('/media', [App\Http\Controllers\Admin\MediaLibraryController::class, 'index'])->name('media.index');
+    Route::post('/media', [App\Http\Controllers\Admin\MediaLibraryController::class, 'store'])->name('media.store');
+    Route::delete('/media/{mediaFile}', [App\Http\Controllers\Admin\MediaLibraryController::class, 'destroy'])->name('media.destroy');
+
+    // WhatsApp Campaigns
+    Route::get('/campaigns', [App\Http\Controllers\Admin\CampaignController::class, 'index'])->name('campaigns.index');
+    Route::get('/campaigns/create', [App\Http\Controllers\Admin\CampaignController::class, 'create'])->name('campaigns.create');
+    Route::post('/campaigns', [App\Http\Controllers\Admin\CampaignController::class, 'store'])->name('campaigns.store');
+    Route::get('/campaigns/{campaign}', [App\Http\Controllers\Admin\CampaignController::class, 'show'])->name('campaigns.show');
+    Route::post('/campaigns/{campaign}/recipients', [App\Http\Controllers\Admin\CampaignController::class, 'addRecipients'])->name('campaigns.add-recipients');
+    Route::delete('/campaigns/{campaign}/recipients/{recipient}', [App\Http\Controllers\Admin\CampaignController::class, 'removeRecipient'])->name('campaigns.remove-recipient');
+    Route::post('/campaigns/{campaign}/send', [App\Http\Controllers\Admin\CampaignController::class, 'send'])->name('campaigns.send');
+    Route::post('/campaigns/{campaign}/retry-failed', [App\Http\Controllers\Admin\CampaignController::class, 'retryFailed'])->name('campaigns.retry-failed');
+    Route::get('/campaigns/{campaign}/progress', [App\Http\Controllers\Admin\CampaignController::class, 'progress'])->name('campaigns.progress');
+    Route::get('/campaigns/{campaign}/logs', [App\Http\Controllers\Admin\CampaignController::class, 'logs'])->name('campaigns.logs');
+    Route::delete('/campaigns/{campaign}', [App\Http\Controllers\Admin\CampaignController::class, 'destroy'])->name('campaigns.destroy');
 
     // Analytics & Reports
     Route::get('/analytics', [App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
@@ -70,10 +88,10 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 // Representative Routes
 Route::middleware(['auth', 'role:representative'])->prefix('portal')->name('representative.')->group(function () {
     Route::get('/dashboard', [RepDashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::resource('patients', RepPatientController::class);
     Route::resource('orders', RepOrderController::class);
-    
+
     // Lead Management
     Route::get('/leads', [App\Http\Controllers\Representative\LeadController::class, 'index'])->name('leads.index');
     Route::get('/leads/{lead}/edit', [App\Http\Controllers\Representative\LeadController::class, 'edit'])->name('leads.edit');

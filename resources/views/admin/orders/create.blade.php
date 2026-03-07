@@ -10,17 +10,26 @@
 
             <div x-data="{ createNew: {{ old('create_new_patient') == '1' ? 'true' : 'false' }} }">
                 <input type="hidden" name="create_new_patient" :value="createNew ? 1 : 0">
-            
+
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                
+
                  <!-- Patient Selection -->
                 <div class="col-span-2 md:col-span-1" x-show="!createNew">
                      <label class="block text-sm text-gray-700">Select Patient</label>
-                    <select name="patient_id" class="block w-full mt-1 border-gray-300 rounded-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50">
+                    <input type="text"
+                           id="patient_search"
+                           placeholder="Search by name or phone..."
+                           class="block w-full mt-1 border-gray-300 rounded-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50">
+                    <p id="patient_search_meta" class="mt-1 text-xs text-gray-500">Type to filter patients by name, phone, or representative.</p>
+                    <select id="patient_id" name="patient_id" class="block w-full mt-2 border-gray-300 rounded-md focus:border-hoot-green focus:ring focus:ring-hoot-green focus:ring-opacity-50">
                         <option value="">Select Patient</option>
                         @foreach($patients as $patient)
+                            @php
+                                $repName = optional(optional($patient->representative)->user)->name ?? 'Unassigned';
+                                $phone = $patient->phone ?? '';
+                            @endphp
                             <option value="{{ $patient->id }}" {{ (old('patient_id') == $patient->id || (isset($selectedPatient) && $selectedPatient->id == $patient->id)) ? 'selected' : '' }}>
-                                {{ $patient->name }} ({{ $patient->representative->user->name }})
+                                {{ $patient->name }} - {{ $phone }} ({{ $repName }})
                             </option>
                         @endforeach
                     </select>
@@ -126,4 +135,42 @@
             </div>
         </form>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('patient_search');
+            const patientSelect = document.getElementById('patient_id');
+            const meta = document.getElementById('patient_search_meta');
+
+            if (!searchInput || !patientSelect || !meta) {
+                return;
+            }
+
+            const options = Array.from(patientSelect.options).slice(1);
+
+            const normalize = (text) => (text || '').toLowerCase().trim();
+
+            const applyFilter = () => {
+                const query = normalize(searchInput.value);
+                let visibleCount = 0;
+
+                options.forEach((option) => {
+                    const haystack = normalize(option.textContent);
+                    const visible = query === '' || haystack.includes(query);
+                    option.hidden = !visible;
+                    if (visible) visibleCount += 1;
+                });
+
+                if (query === '') {
+                    meta.textContent = 'Type to filter patients by name, phone, or representative.';
+                } else {
+                    meta.textContent = `${visibleCount} patient(s) matched.`;
+                }
+            };
+
+            searchInput.addEventListener('input', applyFilter);
+        });
+    </script>
+    @endpush
 </x-app-layout>

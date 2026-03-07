@@ -10,6 +10,7 @@ use App\Models\LeadActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LeadController extends Controller
 {
@@ -25,10 +26,10 @@ class LeadController extends Controller
         // Priority: Hot leads without recent activity > New leads > Hot leads > Warm leads > Cold leads
         $search = trim((string) $request->get('search', ''));
 
-        $leads = Patient::where('representative_id', $representative->id)
+        $query = Patient::where('representative_id', $representative->id)
             ->whereIn('lead_status', ['new', 'assigned', 'contacted', 'negotiating'])
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(function ($subQuery) use ($search) {
+            ->when($search !== '', function ($q) use ($search) {
+                $q->where(function ($subQuery) use ($search) {
                     $subQuery
                         ->where('name', 'like', "%{$search}%")
                         ->orWhere('phone', 'like', "%{$search}%")
@@ -37,10 +38,10 @@ class LeadController extends Controller
             })
             ->with(['latestActivity'])
             ->orderByRaw("
-                CASE 
+                CASE
                     WHEN lead_quality = 'hot' AND NOT EXISTS (
-                        SELECT 1 FROM lead_activities 
-                        WHERE lead_activities.patient_id = patients.id 
+                        SELECT 1 FROM lead_activities
+                        WHERE lead_activities.patient_id = patients.id
                         AND lead_activities.created_at > NOW() - INTERVAL 2 DAY
                     ) THEN 1
                     WHEN lead_status = 'new' OR lead_status = 'assigned' THEN 2
@@ -50,13 +51,54 @@ class LeadController extends Controller
                     ELSE 6
                 END ASC
             ")
-            ->orderBy('assigned_at', 'desc')
-            ->paginate(15)
-            ->withQueryString();
-            
+            ->orderBy('assigned_at', 'desc');
+
+        // CSV Export
+        if ($request->has('export') && $request->export === 'true') {
+            return $this->exportCsv($query->get());
+        }
+
+        $leads = $query->paginate(15)->withQueryString();
+
         $medicines = Medicine::active()->get();
 
         return view('representative.leads.index', compact('leads', 'medicines'));
+    }
+
+    private function exportCsv($leads)
+    {
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="my_leads_export_' . now()->format('Y-m-d_H-i-s') . '.csv"',
+        ];
+
+        $callback = function() use ($leads) {
+            $file = fopen('php://output', 'w');
+
+            fputcsv($file, [
+                'Name',
+                'Phone',
+                'Email',
+                'Country',
+                'Status',
+                'Quality',
+            ]);
+
+            foreach ($leads as $lead) {
+                fputcsv($file, [
+                    $lead->name ?? '',
+                    $lead->phone ?? '',
+                    $lead->email ?? '',
+                    $lead->country ?? '',
+                    ucfirst(str_replace('_', ' ', $lead->lead_status ?? '')),
+                    ucfirst($lead->lead_quality ?? ''),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 
     public function storeActivity(Request $request, Patient $lead)
@@ -152,7 +194,7 @@ class LeadController extends Controller
             'notes' => 'nullable|string',
             'lead_quality' => 'nullable|in:hot,warm,cold',
             'lead_status' => 'required|in:new,assigned,contacted,negotiating,lost,converted',
-            
+
             // Order details if converting
             'medicine_id' => 'required_if:lead_status,converted|nullable|exists:medicines,id',
             'packs_ordered' => 'required_if:lead_status,converted|nullable|integer|min:1',
@@ -161,7 +203,7 @@ class LeadController extends Controller
         $lead->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'phone' => $validated['phone'], 
+            'phone' => $validated['phone'],
             'country' => $validated['country'],
             'notes' => $validated['notes'],
             'lead_quality' => $validated['lead_quality'],

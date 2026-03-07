@@ -52,6 +52,10 @@
                 <button type="submit" class="px-4 py-2.5 bg-hoot-dark hover:bg-hoot-green text-white rounded-xl text-sm font-medium transition-colors">
                     Search
                 </button>
+                <button type="submit" name="export" value="true" class="px-4 py-2.5 bg-white text-corp-600 border border-corp-200 hover:bg-corp-50 rounded-xl text-sm font-medium transition-colors">
+                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Export
+                </button>
                 @if(request('search'))
                     <a href="{{ route('representative.leads.index') }}" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-medium transition-colors">
                         Clear
